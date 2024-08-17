@@ -1,11 +1,11 @@
 import shutil, time, sys, os
 
-def get_build_no():
-    return int(open("scripts\\build.txt", "r").read()) if os.path.isfile("scripts\\build.txt") else 0
+def get_ver_no():
+    return float(open("scripts\\version.txt", "r").read()) if os.path.isfile("scripts\\version.txt") else 0
 
 def update_build_no():
-    build_no = str(get_build_no() + 1) # increment +1 to the current build no of AO
-    open("scripts\\build.txt", "w").write(build_no)
+    build_no = str(get_ver_no() + 1) # increment +1 to the current build no of AO
+    open("scripts\\version.txt", "w").write(build_no)
 
 def precompile_files():
     filedata = [
@@ -48,7 +48,7 @@ def compile_ao():
     # https://stackoverflow.com/a/2909998/18121288
     src_files = " ".join([os.path.join(path, "*.cpp") for path, _, files in os.walk("src") if any(name.endswith(".cpp") for name in files)])
     include_dirs = "-Isrc/ -Isrc/shared/"
-    script = f"g++ src/ico.o {src_files} {include_dirs} -DVERSION=2.8 -DBUILD_NUMBER={get_build_no()} -std=c++20 -o bin/AO.exe"
+    script = f"g++ src/ico.o {src_files} {include_dirs} -DVERSION={get_ver_no()} -std=c++20 -o bin/AO.exe"
 
     start = time.perf_counter()
     os.system(script)
