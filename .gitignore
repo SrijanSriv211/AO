@@ -1,0 +1,4 @@
+.vscode/
+bin/
+src/ico.o
+src/aopch.h.gch
