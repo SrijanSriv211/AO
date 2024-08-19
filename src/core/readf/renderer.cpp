@@ -8,6 +8,9 @@ namespace console
 {
     void readf::render_tokens()
     {
+        // get all white points
+        this->get_white_points();
+
         // poop through each token starting from first different token
         render_token(diff_token_idx.first, diff_token_idx.second);
         for (std::vector<lex::token>::size_type i = diff_token_idx.first + 1; i < this->lexer.tokens.size(); i++)
@@ -16,10 +19,14 @@ namespace console
         this->ren_text_buffer = this->text_buffer;
     }
 
-    //TODO: For some reason `;` is not being rendered properly. Fix it.
     void readf::render_token(const int& token_idx, const int& char_idx)
     {
         lex::token token = this->lexer.tokens[token_idx];
+
+        // EOL is useless so don't render it.
+        if (token.type == lex::token_type::EOL)
+            return;
+
         std::string Token = token.name.substr(char_idx, token.name.length());
         console::color c = console::color::WHITE;
 
@@ -27,8 +34,7 @@ namespace console
         if (this->color_codes.find(token.type) != this->color_codes.end())
             c = this->color_codes[token.type];
 
-        // if the previous token was a `;` then print the current toekn in white color
-        else if (token_idx == 0 || (token_idx-1 >= 0 && this->lexer.tokens[token_idx-1].type == lex::token_type::EOL))
+        else if (strings::any(token_idx, white_points))
             c = console::color::LIGHT_WHITE;
 
         else
@@ -59,14 +65,9 @@ namespace console
         const int n_whitespaces = ren_text_buffer.substr(diff_start, ren_text_buffer.length()).length();
         std::cout << std::string(n_whitespaces, ' ');
         this->set_cursor_position(total_dist);
-
         // clear the error message log that was printed (if it was printed).
         this->clear_error_msg();
-    }
-
-    void readf::clear_error_msg()
-    {
-        std::cout << "\n" << std::string(this->console_window_width(), ' ');
+        this->set_cursor_position(total_dist);
     }
 
     void readf::update_console(const bool& render_suggestions)
@@ -87,6 +88,41 @@ namespace console
             this->vector3.y--;
             this->set_cursor_position(this->vector3.x);
             std::cout << std::endl;
+        }
+    }
+
+    void readf::clear_error_msg()
+    {
+        std::cout << "\n" << std::string(this->console_window_width(), ' ');
+    }
+
+    // render tokens with white color on these points such as the very first token or the tokens successor of semicolon token.
+    // this doesn't include whitespaces or the EOL token at the last of the tokens array, it only applies on renderable tokens.
+    // basically they are white points
+    void readf::get_white_points()
+    {
+        std::vector<lex::token_type> types(this->lexer.tokens.size());
+        std::transform(this->lexer.tokens.begin(), this->lexer.tokens.end(), types.begin(), [](const lex::token& token) { return token.type; });
+
+        bool pause_adding_points = false;
+
+        for (std::vector<lex::token_type>::size_type i = 0; i < types.size(); i++)
+        {
+            lex::token_type tok_type = types[i];
+            if (tok_type == lex::token_type::EOL)
+            {
+                white_points.push_back(i);
+                break;
+            }
+
+            else if (tok_type != lex::token_type::WHITESPACE && tok_type != lex::token_type::SEMICOLON && !pause_adding_points)
+            {
+                white_points.push_back(i);
+                pause_adding_points = true;
+            }
+
+            else if (tok_type == lex::token_type::SEMICOLON && pause_adding_points)
+                pause_adding_points = false;
         }
     }
 }
