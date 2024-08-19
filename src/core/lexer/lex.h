@@ -42,5 +42,5 @@ private:
     std::regex str_re = std::regex(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*')");
     std::regex identifier_re = std::regex(R"([\w\d_\-.+*/]+)");
     std::regex symbol_re = std::regex(R"([(),;?@!:>]+)");
-    std::regex extras_re = std::regex(R"([ ]+|#.*)"); // comments and white spaces
+    std::regex extras_re = std::regex(R"([ ]+|#.*|.+)"); // comments and white spaces
 };
