@@ -16,5 +16,7 @@ namespace console
         this->vector3.i--;
         this->vector3.x--;
         text_buffer.erase(this->vector3.i, 1);
+
+        this->update_console();
     }
 }
