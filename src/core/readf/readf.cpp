@@ -2,6 +2,7 @@
 #include "readf.h"
 
 #include "console/console.h"
+#include "strings/strings.h"
 
 #include "core/lexer/lex.h"
 
@@ -24,12 +25,13 @@ namespace console
         // init color codes
         this->color_codes = {
             { lex::STRING, console::LIGHT_YELLOW },
-            { lex::EXPR, console::CYAN },
-            { lex::BOOL, console::LIGHT_MAGENTA },
+            { lex::EXPR, console::LIGHT_CYAN },
+            { lex::BOOL, console::CYAN },
+            { lex::FLAGS, console::GRAY },
             { lex::SYMBOL, console::GRAY },
             { lex::COMMENT, console::GRAY },
             { lex::EOL, console::GRAY },
-            { lex::HIDDEN, console::LIGHT_GREEN }
+            { lex::HIDDEN, console::GREEN }
         };
 
         // init key codes
@@ -61,16 +63,21 @@ namespace console
 
             else if (key.wVirtualKeyCode == VK_RETURN)
             {
-                int total_dist = this->init_cursor_pos.X + text_buffer.length();
+                lexer = lex(text_buffer, false);
 
-                COORD pos = this->calc_xy_coord(total_dist);
+                if (strings::is_empty(lexer.error))
+                {
+                    COORD pos = this->calc_xy_coord(this->init_cursor_pos.X + text_buffer.length());
 
-                // this will move the cursor to the end of the text
-                vector3.x = 0;
-                vector3.y += pos.Y + 1;
+                    // this will move the cursor to the end of the text
+                    vector3.x = 0;
+                    vector3.y += pos.Y + 1;
 
-                std::cout << std::endl;
-                break;
+                    std::cout << std::endl;
+                    break;
+                }
+
+                console::print("\n" + lexer.error, console::color::BLACK, console::color::LIGHT_RED, false);
             }
 
             else if (!std::iscntrl(key.uChar.UnicodeChar))

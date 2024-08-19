@@ -51,6 +51,7 @@ namespace console
         int get_text_diff(const std::string& text, const std::string& text2);
 
         // define rendering functions
+        void clear_error_msg();
         void clear_console();
         void update_console(const bool& render_suggestions=true);
         void render_tokens();
