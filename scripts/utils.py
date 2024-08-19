@@ -33,7 +33,7 @@ def sec_to_time(seconds):
 
     print("total time: " + ", ".join(t))
 
-def rm(*files):
+def rm(files):
     for i in files:
         if os.path.isdir(i):
             shutil.rmtree(i)

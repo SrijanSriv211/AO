@@ -3,7 +3,7 @@ import sys, os
 
 config.src_path = "src"
 config.icon_path = "src/ico.o"
-config.includes = ["src/", "src/shared/"]
+config.includes = ["src/", "src/shared/", "src/vendor/"]
 config.defines = ["VERSION=2024.1"]
 config.std = "c++20"
 config.outpath = "bin\\AO.exe"
@@ -27,7 +27,7 @@ if not sys.argv[1:]:
 
 for i, x in enumerate(sys.argv[1:]):
     if x == "clean":
-        rm("bin/", "src/aopch.h.gch", "src/ico.o")
+        rm(sys.argv[i+2:] if sys.argv[i+2:] else ["bin/", "src/aopch.h.gch", "src/ico.o"])
 
     elif x == "pch":
         precompile_files()
