@@ -10,12 +10,13 @@ public:
         COMMENT, // 2
         WHITESPACE, // 3
         IDENTIFIER, // 4
-        HIDDEN, // 5
-        STRING, // 6
-        SYMBOL, // 7
-        FLAGS, // 8
-        BOOL, // 9
-        EXPR // 10
+        SEMICOLON, // 15
+        HIDDEN, // 6
+        STRING, // 7
+        SYMBOL, // 8
+        FLAGS, // 9
+        BOOL, // 10
+        EXPR // 11
     };
 
     struct token
@@ -25,7 +26,8 @@ public:
     };
 
 public:
-    lex(const std::string& code, const bool& break_at_error=true);
+    lex(const std::string& code, const bool& break_at_error=true, const bool& unescape_strings=true);
+    void print_error();
 
 public:
     std::vector<token> tokens;
@@ -38,6 +40,8 @@ private:
 
 private:
     bool break_at_error;
+    bool unescape_strings;
+    std::map<std::string, std::string> escape_chars = {};
     std::regex math_re = std::regex(R"(\(*\d+(?:[_\d]*)\)*(?:\s*[-+*/]\s*\(*\d+(?:[_\.\d]*)\)*)*)");
     std::regex str_re = std::regex(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*')");
     std::regex identifier_re = std::regex(R"([\w\d_\-.+*/]+)");

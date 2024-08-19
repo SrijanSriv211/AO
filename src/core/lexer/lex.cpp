@@ -1,9 +1,26 @@
 #include "aopch.h"
 #include "lex.h"
 
-lex::lex(const std::string& code, const bool& break_at_error)
+#include "console/console.h"
+
+lex::lex(const std::string& code, const bool& break_at_error, const bool& unescape_strings)
 {
+    this->escape_chars = {
+        {"\\\\", "\\"},
+        {"\\\"", "\""},
+        {"\\'", "'"},
+        {"\\n", "\n"},
+        {"\\n", "\n"},
+        {"\\0", "\0"},
+        {"\\t", "\t"},
+        {"\\r", "\r"},
+        {"\\b", "\b"},
+        {"\\a", "\a"},
+        {"\\f", "\f"}
+    };
+
     this->break_at_error = break_at_error;
+    this->unescape_strings = unescape_strings;
     std::regex re(R"(\(*\d+(?:[_\d]*)\)*(?:\s*[-+*/]\s*\(*\d+(?:[_\.\d]*)\)*)*|\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|[\w\d_\-.+*/]+|[(),;?@!:>]|[ ]+|#.*|.+)");
 
     std::vector<std::string> toks = this->tokenizer(code, re);
@@ -22,4 +39,9 @@ std::vector<std::string> lex::tokenizer(const std::string& str, const std::regex
         toks.push_back(it->str());
 
     return toks;
+}
+
+void lex::print_error()
+{
+    console::print(this->error, console::color::BLACK, console::color::LIGHT_RED);
 }
