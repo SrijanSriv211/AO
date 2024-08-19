@@ -8,20 +8,6 @@ void lex::parse(const std::vector<std::string>& toks)
     std::vector<lex::token> tokens;
     std::string tok;
 
-    std::map<std::string, std::string> escape_chars = {
-        {"\\\\", "\\"},
-        {"\\\"", "\""},
-        {"\\'", "'"},
-        {"\\n", "\n"},
-        {"\\n", "\n"},
-        {"\\0", "\0"},
-        {"\\t", "\t"},
-        {"\\r", "\r"},
-        {"\\b", "\b"},
-        {"\\a", "\a"},
-        {"\\f", "\f"}
-    };
-
     for (std::vector<std::string>::size_type i = 0; i < toks.size(); i++)
     {
         tok = toks[i];
@@ -41,7 +27,7 @@ void lex::parse(const std::vector<std::string>& toks)
 
         else if (tok == ";")
         {
-            tokens.push_back({tok, lex::EOL});
+            tokens.push_back({tok, lex::SEMICOLON});
             tok.clear();
         }
 
@@ -58,7 +44,10 @@ void lex::parse(const std::vector<std::string>& toks)
                 this->error = "unexpected end of tokens after " + std::string(1, tok.front());
 
                 if (this->break_at_error)
+                {
+                    this->print_error();
                     break;
+                }
             }
 
             else if (tok.front() != tok.back())
@@ -66,13 +55,19 @@ void lex::parse(const std::vector<std::string>& toks)
                 this->error = "missing terminating " + std::string(1, tok.front()) + " character";
 
                 if (this->break_at_error)
+                {
+                    this->print_error();
                     break;
+                }
             }
 
-            for (auto const& [key, val] : escape_chars)
+            if (this->unescape_strings)
             {
-                if (tok.find(key) != std::string::npos)
-                    tok = strings::replace_all(tok, key, val);
+                for (const auto& [key, val] : this->escape_chars)
+                {
+                    if (tok.find(key) != std::string::npos)
+                        tok = strings::replace_all(tok, key, val);
+                }
             }
 
             tokens.push_back({tok, lex::STRING});
@@ -121,7 +116,8 @@ std::vector<lex::token> lex::reduce_toks(const std::vector<lex::token>& toks)
 
     for (std::vector<lex::token>::size_type i = 0; i < toks.size(); i++)
     {
-        if (toks[i].type == toks[i+1].type)
+        // for now only combine identifiers. maybe in future i'll change it and make it work in general.
+        if (toks[i].type == toks[i+1].type && toks[i].type == lex::IDENTIFIER)
         {
             tok_name += toks[i].name + toks[i+1].name;
             tok_type = toks[i].type;
