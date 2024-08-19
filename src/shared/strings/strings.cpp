@@ -36,7 +36,7 @@ namespace strings
 
         while (true)
         {
-            if (str.find(old_str) == std::string::npos)
+            if (replaced_str.find(old_str) == std::string::npos)
                 break;
 
             replaced_str.replace(str.find(old_str), old_str.length(), new_str);
@@ -60,6 +60,17 @@ namespace strings
                 return true;
 
             else if (!strict && str.find(i) != std::string::npos)
+                return true;
+        }
+
+        return false;
+    }
+
+    bool any(const int& str, const std::vector<int>& iter)
+    {
+        for (const int& i : iter)
+        {
+            if (str == i)
                 return true;
         }
 
