@@ -32,7 +32,7 @@ namespace AO
     {
         system("cls");
         std::string AO_version = STR(VERSION);
-        console::print("AO 2024." + AO_version + "  ", console::color::LIGHT_YELLOW, false);
+        console::print("AO " + AO_version + "  ", console::color::LIGHT_YELLOW, false);
         console::print("(" + std::string(std::getenv("username")) + ")  ", console::color::LIGHT_WHITE, false);
         console::print(datetime::datetime(), console::color::GRAY);
 
