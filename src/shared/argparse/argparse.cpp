@@ -34,7 +34,7 @@ std::vector<argparse::parsed_argument> argparse::parse(const std::vector<std::st
     std::vector<argparse::parsed_argument> parsed_args;
     const std::vector<std::string> arg_flags = { "--", "-", "/" };
 
-    for (int i = 0; i < args.size(); i++)
+    for (std::vector<std::string>::size_type i = 0; i < args.size(); i++)
     {
         std::string lowercase_arg = strings::lowercase(args[i]);
         argument matching_argument = find_matching_argument(lowercase_arg);
@@ -114,7 +114,7 @@ void argparse::print_help()
     std::cout << this->name << " [OPTIONS]" << "\n\n";
 
     console::print("Options:", console::color::MAGENTA);
-    for (int i = 0; i < arguments.size(); i++)
+    for (std::vector<argparse::argument>::size_type i = 0; i < arguments.size(); i++)
     {
         argparse::argument arg = arguments[i];
 
@@ -156,7 +156,7 @@ void argparse::get_help(const std::vector<std::string>& cmd_names)
     {
         std::cout << "Type `help <command-name>` for more information on a specific command" << "\n\n";
 
-        for (int i = 0; i < arguments.size(); i++)
+        for (std::vector<argparse::argument>::size_type i = 0; i < arguments.size(); i++)
         {
             argparse::argument detail = arguments[i];
 
@@ -172,7 +172,7 @@ void argparse::get_help(const std::vector<std::string>& cmd_names)
 
     else
     {
-        for (const std::string name : names)
+        for (const std::string& name : names)
         {
             argument matching_cmd = find_matching_argument(name);
             if (matching_cmd.names.empty())

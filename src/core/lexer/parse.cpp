@@ -22,7 +22,7 @@ void lex::parse(const std::vector<std::string>& toks)
         {"\\f", "\f"}
     };
 
-    for (int i = 0; i < toks.size(); i++)
+    for (std::vector<std::string>::size_type i = 0; i < toks.size(); i++)
     {
         tok = toks[i];
 
@@ -119,7 +119,7 @@ std::vector<lex::token> lex::reduce_toks(const std::vector<lex::token>& toks)
     lex::token_type tok_type;
     std::string tok_name;
 
-    for (int i = 0; i < toks.size(); i++)
+    for (std::vector<lex::token>::size_type i = 0; i < toks.size(); i++)
     {
         if (toks[i].type == toks[i+1].type)
         {

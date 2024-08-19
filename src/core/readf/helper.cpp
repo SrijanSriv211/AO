@@ -121,7 +121,7 @@ namespace console
 
     int readf::get_text_diff(const std::string& text, const std::string& text2)
     {
-        for (int char_idx = 0; char_idx < std::min(text.length(), text2.length()); char_idx++)
+        for (long long unsigned int char_idx = 0; char_idx < std::min(text.length(), text2.length()); char_idx++)
         {
             if (text[char_idx] != text2[char_idx])
                 return char_idx;

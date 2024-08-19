@@ -20,7 +20,7 @@ namespace strings
     std::string join(const std::string& separator, const std::vector<std::string>& arr)
     {
         std::string str = "";
-        for (int i = 0; i < arr.size(); ++i)
+        for (std::vector<std::string>::size_type i = 0; i < arr.size(); ++i)
         {
             str += arr[i];
             if (i < arr.size() - 1)
