@@ -30,7 +30,7 @@ namespace console
             { lex::FLAGS, console::GRAY },
             { lex::SYMBOL, console::GRAY },
             { lex::COMMENT, console::GRAY },
-            { lex::EOL, console::GRAY },
+            { lex::SEMICOLON, console::GRAY },
             { lex::HIDDEN, console::GREEN }
         };
 
@@ -63,7 +63,7 @@ namespace console
 
             else if (key.wVirtualKeyCode == VK_RETURN)
             {
-                lexer = lex(text_buffer, false);
+                lexer = lex(text_buffer, false, false);
 
                 if (strings::is_empty(lexer.error))
                 {
@@ -77,7 +77,8 @@ namespace console
                     break;
                 }
 
-                console::print("\n" + lexer.error, console::color::BLACK, console::color::LIGHT_RED, false);
+                std::cout << std::endl;
+                lexer.print_error();
             }
 
             else if (!std::iscntrl(key.uChar.UnicodeChar))
@@ -94,7 +95,7 @@ namespace console
             this->set_cursor_position((short)vector3.x);
         }
 
-        lexer = lex(text_buffer, false);
+        lexer = lex(text_buffer, false, true);
         return lexer.tokens;
     }
 

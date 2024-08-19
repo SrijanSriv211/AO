@@ -94,10 +94,10 @@ namespace console
     std::pair<int, int> readf::get_token_diff(const std::string& text, const std::string& text2)
     {
         // tokenize the updated input text
-        this->lexer = lex(text, false);
+        this->lexer = lex(text, false, false);
 
         // tokenize the updated rendered input text
-        lex ren_lexer = lex(text2, false);
+        lex ren_lexer = lex(text2, false, false);
 
         int smallest_token_list_len = std::min(this->lexer.tokens.size(), ren_lexer.tokens.size());
 

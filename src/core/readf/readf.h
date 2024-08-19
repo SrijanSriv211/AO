@@ -34,8 +34,9 @@ namespace console
         readf::cursor_vec3 vector3 = readf::cursor_vec3(0, 0, 0);
         std::map<lex::token_type, console::color> color_codes = {};
         std::map<std::pair<WORD, DWORD>, std::function<void()>> key_codes = {};
-        lex lexer = lex("", false);
+        lex lexer = lex("", false, false);
         std::pair<int, int> diff_token_idx;
+        std::vector<int> white_points = {};
 
     private:
         // define helper functions
@@ -56,6 +57,7 @@ namespace console
         void update_console(const bool& render_suggestions=true);
         void render_tokens();
         void render_token(const int& token_idx, const int& char_idx);
+        void get_white_points();
 
         // define key functions
         void handle_ctrl_enter();
