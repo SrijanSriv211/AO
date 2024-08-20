@@ -1,13 +1,13 @@
 # <img title="AO" src="res/AO.png" width="32" height="32"> AO
 ## :wave: Introduction
 ### :question: What is AO?
-> 1. **AO** stands for **Automate Output** much like **IO (Input Output)**.<br>
-> 2. AO is build to work as an **automation tool** for programmers.<br>
-> 3. Basically you can **write simple scripts in any language** and use **call them whenever you want**.<br>
-> 3. One great thing about AO is that **you can call those scripts from anywhere**.<br>
-> 4. From a **Python file**, from a **C++ file** or even from a simple **server/API** request.<br>
-> 4. At least that's what my aim is with AO.<br>
-> 5. Also I'm building AO as an **execution engine** for my **personal AI assistant** [WINTER](https://github.com/SrijanSriv211/WINTER)
+> 1. **AO** stands for **Automate Output** much like the name **IO (Input Output)**.<br>
+> 2. AO is built to work as an **automation tool** for programmers.<br>
+> 3. You can **write scripts in any language** and **call them whenever or whereever you want**.<br>
+> 3. All the scripts can **run in parallel** if want.<br>
+> 4. From **Python**, to **C++** or even from a simple **server/API** request for AO can do the job.<br>
+> 4. At least that's what my aim is with AO. There will be more plans in the future and more refining of the project will take place.<br>
+> 5. Also I'm building AO as an **execution engine** for my **personal AI assistant** [WINTER](https://github.com/SrijanSriv211/WINTER).
 
 ### :question: Why am I working on it?
 > I started working on AOs as a hobby project back in 2020. Originally the project was written in Python but then I shifted the project to C#.
@@ -35,12 +35,23 @@ If the repository was cloned non-recursively previously, use `git submodule upda
 
 <ins>**2. Running and Compiling AO:**</ins>
 
-1. To run the program use:
+1. Run the program:
 ```console
-python scripts\build.py run
+scripts\build run
 ```
 
-2. To compile the program don't use dotnet build, instead run:
+2. Compile the program:
 ```console
-python scripts\build.py
+scripts\build
+```
+
+3. Do a clean build:
+```console
+scripts\build clean
+scripts\build
+```
+
+4. Precompile headers:
+```conslle
+scripts\build pch
 ```
