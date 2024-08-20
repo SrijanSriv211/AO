@@ -1,5 +1,6 @@
 .vscode/
 __pycache__/
 bin/
+obj/
 src/ico.o
 src/aopch.h.gch
