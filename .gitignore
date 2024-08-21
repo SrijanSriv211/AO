@@ -4,3 +4,4 @@ bin/
 obj/
 src/ico.o
 src/aopch.h.gch
+scripts/index.json

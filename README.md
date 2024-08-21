@@ -52,6 +52,6 @@ scripts\build
 ```
 
 4. Precompile headers:
-```conslle
+```console
 scripts\build pch
 ```
