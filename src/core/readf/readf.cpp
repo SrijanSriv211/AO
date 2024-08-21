@@ -8,10 +8,10 @@
 
 namespace console
 {
-    readf::readf(std::vector<std::string> suggestions_list)
+    readf::readf(std::vector<std::string> suggestions)
     {
         this->suggestion_idx = 0;
-        this->suggestions_list = suggestions_list;
+        this->suggestions = suggestions;
 
         this->text_buffer = "";
         this->ren_text_buffer = "";
@@ -42,11 +42,26 @@ namespace console
             // the lambda is used here to define and associate an inline action with a key combination.
             //*NOTE: explanation by chatgpt
             { {VK_RETURN, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_enter(); } },
+            { {VK_TAB, 0}, [this](){ this->handle_tab(); } },
+            { {VK_SPACE, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_spacebar(); } },
+
+            { {VK_ESCAPE, 0}, [this](){ this->handle_escape(); } },
+            { {VK_ESCAPE, SHIFT_PRESSED}, [this](){ this->handle_shift_escape(); } },
+
             { {VK_BACK, 0}, [this](){ this->handle_backspace(); } },
+            { {VK_BACK, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_backspace(); } },
+
+            { {VK_DELETE, 0}, [this](){ this->handle_delete(); } },
+            { {VK_DELETE, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_delete(); } },
+
             { {VK_RIGHT, 0}, [this](){ this->handle_right_arrow(); } },
             { {VK_RIGHT, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_right_arrow(); } },
+
             { {VK_LEFT, 0}, [this](){ this->handle_left_arrow(); } },
-            { {VK_LEFT, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_left_arrow(); } }
+            { {VK_LEFT, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_left_arrow(); } },
+
+            { {VK_END, 0}, [this](){ this->handle_end(); } },
+            { {VK_HOME, 0}, [this](){ this->handle_home(); } }
         };
     }
 
@@ -67,22 +82,22 @@ namespace console
 
             else if (key.wVirtualKeyCode == VK_RETURN)
             {
-                lexer = lex(text_buffer, false, false);
+                this->lexer = lex(text_buffer, false, false);
 
                 if (strings::is_empty(lexer.error))
                 {
                     COORD pos = this->calc_xy_coord(this->init_cursor_pos.X + text_buffer.length());
 
                     // this will move the cursor to the end of the text
-                    vector3.x = 0;
-                    vector3.y += pos.Y + 1;
+                    this->vector3.x = 0;
+                    this->vector3.y += pos.Y + 1;
 
                     std::cout << std::endl;
                     break;
                 }
 
                 std::cout << std::endl;
-                lexer.print_error();
+                this->lexer.print_error();
             }
 
             else if (!std::iscntrl(key.uChar.UnicodeChar))
@@ -99,23 +114,8 @@ namespace console
             this->set_cursor_position((short)vector3.x);
         }
 
-        lexer = lex(text_buffer, false, true);
-        return lexer.tokens;
-    }
-
-    // properly set cursor in the terminal
-    void readf::set_cursor_position(const int& total_dist)
-    {
-        COORD pos = this->calc_xy_coord(total_dist);
-        pos.Y += this->vector3.y;
-
-        if (pos.Y >= this->console_window_height() - 1 && pos.X >= this->console_window_width() - 1)
-        {
-            pos.Y--;
-            this->vector3.y--;
-            std::cout << std::endl;
-        }
-
-        this->set_cursor_pos({pos.X, pos.Y});
+        this->lexer = lex(text_buffer, false, true);
+        this->history_list.push_back(text_buffer);
+        return this->lexer.tokens;
     }
 }
