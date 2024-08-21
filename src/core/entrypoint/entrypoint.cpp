@@ -36,5 +36,5 @@ void unrecognized_argument_error(const std::string& err)
 void init_folders()
 {
     foldersystem::create(".ao");
-    filesystem::write(".as\\ao.json", "{}\n");
+    filesystem::write("ao\\settings.json", "{}\n");
 }

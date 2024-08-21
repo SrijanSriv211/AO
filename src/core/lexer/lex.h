@@ -10,7 +10,7 @@ public:
         COMMENT, // 2
         WHITESPACE, // 3
         IDENTIFIER, // 4
-        SEMICOLON, // 15
+        SEMICOLON, // 5
         HIDDEN, // 6
         STRING, // 7
         SYMBOL, // 8
