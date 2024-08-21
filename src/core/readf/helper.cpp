@@ -90,6 +90,22 @@ namespace console
         return state;
     }
 
+    // properly set cursor in the terminal
+    void readf::set_cursor_position(const int& total_dist)
+    {
+        COORD pos = this->calc_xy_coord(total_dist);
+        pos.Y += this->vector3.y;
+
+        if (pos.Y >= this->console_window_height() - 1 && pos.X >= this->console_window_width() - 1)
+        {
+            pos.Y--;
+            this->vector3.y--;
+            std::cout << std::endl;
+        }
+
+        this->set_cursor_pos({pos.X, pos.Y});
+    }
+
     // (token_idx, char_idx)
     std::pair<int, int> readf::get_token_diff(const std::string& text, const std::string& text2)
     {
@@ -131,5 +147,28 @@ namespace console
             return std::min(text.length(), text2.length());
 
         return 0;
+    }
+
+    // render tokens with white color on these points such as the very first token or the tokens successor of semicolon token.
+    // this doesn't include whitespaces or the EOL token at the last of the tokens array, it only applies on renderable tokens.
+    // basically they are white points
+    void readf::get_whitepoints()
+    {
+        std::vector<lex::token_type> types(this->lexer.tokens.size());
+        std::transform(this->lexer.tokens.begin(), this->lexer.tokens.end(), types.begin(), [](const lex::token& token) { return token.type; });
+        whitepoints.push_back(0);
+
+        for (std::vector<lex::token_type>::size_type i = 0; i < types.size(); i++)
+        {
+            // if the current token is a `;` then push the next token index to whitepoints
+            // if the next token is not a whitespace, otherwise move the next of next token index
+            if (types[i] == lex::SEMICOLON)
+                whitepoints.push_back(types[i+1] == lex::WHITESPACE ? i+2 : i+1);
+        }
+    }
+
+    void readf::clear_error_msg()
+    {
+        std::cout << "\n" << std::string(this->console_window_width(), ' ');
     }
 }
