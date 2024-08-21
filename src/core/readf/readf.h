@@ -62,5 +62,9 @@ namespace console
         // define key functions
         void handle_ctrl_enter();
         void handle_backspace();
+        void handle_left_arrow();
+        void handle_ctrl_left_arrow();
+        void handle_right_arrow();
+        void handle_ctrl_right_arrow();
     };
 };

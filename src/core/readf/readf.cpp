@@ -43,6 +43,10 @@ namespace console
             //*NOTE: explanation by chatgpt
             { {VK_RETURN, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_enter(); } },
             { {VK_BACK, 0}, [this](){ this->handle_backspace(); } },
+            { {VK_RIGHT, 0}, [this](){ this->handle_right_arrow(); } },
+            { {VK_RIGHT, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_right_arrow(); } },
+            { {VK_LEFT, 0}, [this](){ this->handle_left_arrow(); } },
+            { {VK_LEFT, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_left_arrow(); } }
         };
     }
 
