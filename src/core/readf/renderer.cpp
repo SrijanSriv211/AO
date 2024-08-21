@@ -6,41 +6,28 @@
 
 namespace console
 {
-    void readf::render_tokens()
+    void readf::update_console(const bool& render_suggestions)
     {
-        // get all white points
-        this->get_white_points();
-
-        // poop through each token starting from first different token
-        render_token(diff_token_idx.first, diff_token_idx.second);
-        for (std::vector<lex::token>::size_type i = diff_token_idx.first + 1; i < this->lexer.tokens.size(); i++)
-            render_token(i, 0);
-
-        this->ren_text_buffer = this->text_buffer;
-    }
-
-    void readf::render_token(const int& token_idx, const int& char_idx)
-    {
-        lex::token token = this->lexer.tokens[token_idx];
-
-        // EOL is useless so don't render it.
-        if (token.type == lex::token_type::EOL)
+        if (this->text_buffer == this->ren_text_buffer)
             return;
 
-        std::string Token = token.name.substr(char_idx, token.name.length());
-        console::color c = console::color::WHITE;
+        this->clear_console();
+        this->render_tokens();
 
-        // print those tokens in color they are associated with
-        if (this->color_codes.find(token.type) != this->color_codes.end())
-            c = this->color_codes[token.type];
+        if (!render_suggestions)
+            return;
 
-        else if (strings::any(token_idx, white_points))
-            c = console::color::LIGHT_WHITE;
+        // if the cursor has reached the bottom of the window, then move it up by one point.
+        // to ensure that the cursor is not going beyond the window which will crash the program.
+        if (this->vector3.y >= this->console_window_height() - 1)
+        {
+            this->vector3.y--;
+            this->set_cursor_position(this->vector3.x);
+            std::cout << std::endl;
+        }
 
-        else
-            c = console::color::WHITE;
-
-        console::print(Token, c, false);
+        this->clear_suggestions();
+        this->render_suggestions();
     }
 
     void readf::clear_console()
@@ -70,59 +57,48 @@ namespace console
         this->set_cursor_position(total_dist);
     }
 
-    void readf::update_console(const bool& render_suggestions)
+    void readf::render_token(const int& token_idx, const int& char_idx)
     {
-        if (this->text_buffer == this->ren_text_buffer)
+        lex::token token = this->lexer.tokens[token_idx];
+
+        // EOL is useless so don't render it.
+        if (token.type == lex::token_type::EOL)
             return;
 
-        this->clear_console();
-        this->render_tokens();
+        std::string Token = token.name.substr(char_idx, token.name.length());
+        console::color c = console::color::WHITE;
 
-        if (!render_suggestions)
-            return;
+        // print those tokens in color they are associated with
+        if (this->color_codes.find(token.type) != this->color_codes.end())
+            c = this->color_codes[token.type];
 
-        // if the cursor has reached the bottom of the window, then move it up by one point.
-        // to ensure that the cursor is not going beyond the window which will crash the program.
-        if (this->vector3.y >= this->console_window_height() - 1)
-        {
-            this->vector3.y--;
-            this->set_cursor_position(this->vector3.x);
-            std::cout << std::endl;
-        }
+        else if (strings::any(token_idx, whitepoints))
+            c = console::color::LIGHT_WHITE;
+
+        else
+            c = console::color::WHITE;
+
+        console::print(Token, c, false);
     }
 
-    void readf::clear_error_msg()
+    void readf::render_tokens()
     {
-        std::cout << "\n" << std::string(this->console_window_width(), ' ');
+        // get all white points
+        this->get_whitepoints();
+
+        // poop through each token starting from first different token
+        render_token(diff_token_idx.first, diff_token_idx.second);
+        for (std::vector<lex::token>::size_type i = diff_token_idx.first + 1; i < this->lexer.tokens.size(); i++)
+            render_token(i, 0);
+
+        this->ren_text_buffer = this->text_buffer;
     }
 
-    // render tokens with white color on these points such as the very first token or the tokens successor of semicolon token.
-    // this doesn't include whitespaces or the EOL token at the last of the tokens array, it only applies on renderable tokens.
-    // basically they are white points
-    void readf::get_white_points()
+    void readf::clear_suggestions()
     {
-        std::vector<lex::token_type> types(this->lexer.tokens.size());
-        std::transform(this->lexer.tokens.begin(), this->lexer.tokens.end(), types.begin(), [](const lex::token& token) { return token.type; });
+    }
 
-        bool pause_adding_points = false;
-
-        for (std::vector<lex::token_type>::size_type i = 0; i < types.size(); i++)
-        {
-            lex::token_type tok_type = types[i];
-            if (tok_type == lex::token_type::EOL)
-            {
-                white_points.push_back(i);
-                break;
-            }
-
-            else if (tok_type != lex::token_type::WHITESPACE && tok_type != lex::token_type::SEMICOLON && !pause_adding_points)
-            {
-                white_points.push_back(i);
-                pause_adding_points = true;
-            }
-
-            else if (tok_type == lex::token_type::SEMICOLON && pause_adding_points)
-                pause_adding_points = false;
-        }
+    void readf::render_suggestions()
+    {
     }
 }
