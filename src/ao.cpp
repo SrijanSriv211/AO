@@ -34,7 +34,7 @@ namespace AO
         std::string AO_version = STR(VERSION);
         console::print("AO " + AO_version + "  ", console::color::LIGHT_YELLOW, false);
         console::print("(" + std::string(std::getenv("username")) + ")  ", console::color::LIGHT_WHITE, false);
-        console::print(datetime::datetime(), console::color::GRAY);
+        console::print(datetime::datetime("%a, %d %b %Y"), console::color::GRAY);
 
         // ask user to use AO in Windows Terminal if they are not already
         const char* env_var_val = std::getenv("WT_SESSION");
@@ -43,8 +43,5 @@ namespace AO
             console::print("> ", console::color::GRAY, false);
             console::print("Please use AO in Windows Terminal for better experience.", console::color::RED);
         }
-
-        console::print(std::filesystem::current_path().string(), console::color::LIGHT_WHITE);
-        console::print("$ ", console::color::LIGHT_WHITE, false);
     }
 }
