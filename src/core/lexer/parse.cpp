@@ -84,9 +84,32 @@ void lex::parse(const std::vector<std::string>& toks)
             tok.clear();
         }
 
+        // check for env vars
+        else if (tok.starts_with('`') && tok.ends_with('`') && tok.size() >= 3)
+        {
+            // it will have at least 3 chars '`' and the env char,
+            // therefore no need to check if tok is greater than 3 chars or not.
+            const std::string env_var_name = tok.substr(1, tok.size() - 2);
+            const char* env_var_val = std::getenv(env_var_name.c_str());
+
+            if (env_var_val != nullptr)
+            {
+                // push it as an identifier since it won't be wrapped inside any string literals
+                //*NOTE: It may change and become more dynamic, so if the env val is an int,
+                //* then the token type will be an int. but that's for future, not now.
+                tokens.push_back({env_var_val, lex::IDENTIFIER});
+            }
+
+            else
+                tokens.push_back({tok, lex::IDENTIFIER});
+
+            tok.clear();
+        }
+
         else
         {
             lex::token_type type;
+
             if (tok == "true" || tok == "false")
                 type = lex::BOOL;
 
