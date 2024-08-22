@@ -31,8 +31,9 @@ namespace AO
     void clear_console()
     {
         system("cls");
-        std::string AO_version = STR(VERSION);
-        console::print("AO " + AO_version + "  ", console::color::LIGHT_YELLOW, false);
+        std::string date_v = STR(VERSION);
+        std::string semantic_v = STR(STD);
+        console::print("AO " + date_v + " [Version " + semantic_v + "]  ", console::color::LIGHT_YELLOW, false);
         console::print("(" + std::string(std::getenv("username")) + ")  ", console::color::LIGHT_WHITE, false);
         console::print(datetime::datetime("%a, %d %b %Y"), console::color::GRAY);
 

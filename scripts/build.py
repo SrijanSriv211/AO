@@ -5,7 +5,7 @@ CONFIG = {
     "SRC_PATH": "src",
     "ICON_PATH": "src/ico.o",
     "INCLUDES": ["src/", "src/shared/", "src/vendor/"],
-    "DEFINES": ["VERSION=24.1"],
+    "DEFINES": ["VERSION=2024.3", "STD=2.8"],
     "STD": "c++20",
     "OUTPATH": "bin\\AO.exe",
     "OPTIMIZATION": "-O2",
