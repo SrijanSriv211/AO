@@ -37,7 +37,7 @@ void lex::parse(const std::vector<std::string>& toks)
             tok.clear();
         }
 
-        else if (tok.starts_with("\"") || tok.starts_with("'"))
+        else if (tok.starts_with("\"") || tok.starts_with("'") || tok.starts_with("`"))
         {
             if (tok.length() == 1)
             {
@@ -69,40 +69,41 @@ void lex::parse(const std::vector<std::string>& toks)
                         tok = strings::replace_all(tok, key, val);
                 }
             }
+            lex::token str_token = {tok, lex::STRING};
 
-            tokens.push_back({tok, lex::STRING});
+            // check for env vars
+            if (tok.front() == '`' && tok.size() >= 3 && this->get_env_var)
+            {
+                // it will have at least 3 chars '`' and the env char,
+                // therefore no need to check if tok is greater than 3 chars or not.
+                const std::string env_var_name = tok.substr(1, tok.size() - 2);
+                const char* env_var_val = std::getenv(env_var_name.c_str());
+
+                if (env_var_val != nullptr)
+                {
+                    // push it as an identifier since it won't be wrapped inside any string literals
+                    //*NOTE: It may change and become more dynamic, so if the env val is an int,
+                    //* then the token type will be an int. but that's for future, not now.
+                    str_token = {env_var_val, lex::IDENTIFIER};
+                }
+            }
+
+            tokens.push_back(str_token);
             tok.clear();
         }
 
         // check for math expressions
         else if (std::regex_match(tok, this->math_re))
         {
-            std::string normalized_expr = strings::replace_all(tok, "_", "");
+            std::string expr_token = tok;
 
             //TODO: Implement a math engine to evaluate math exprs.
-            tokens.push_back({normalized_expr, lex::EXPR});
-            tok.clear();
-        }
-
-        // check for env vars
-        else if (tok.starts_with('`') && tok.ends_with('`') && tok.size() >= 3)
-        {
-            // it will have at least 3 chars '`' and the env char,
-            // therefore no need to check if tok is greater than 3 chars or not.
-            const std::string env_var_name = tok.substr(1, tok.size() - 2);
-            const char* env_var_val = std::getenv(env_var_name.c_str());
-
-            if (env_var_val != nullptr)
+            if (this->do_math)
             {
-                // push it as an identifier since it won't be wrapped inside any string literals
-                //*NOTE: It may change and become more dynamic, so if the env val is an int,
-                //* then the token type will be an int. but that's for future, not now.
-                tokens.push_back({env_var_val, lex::IDENTIFIER});
+                expr_token = strings::replace_all(tok, "_", "");
             }
 
-            else
-                tokens.push_back({tok, lex::IDENTIFIER});
-
+            tokens.push_back({expr_token, lex::EXPR});
             tok.clear();
         }
 

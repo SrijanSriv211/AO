@@ -114,7 +114,7 @@ namespace console
             this->set_cursor_position((short)vector3.x);
         }
 
-        this->lexer = lex(text_buffer, false, true);
+        this->lexer = lex(text_buffer, false, true, true, true);
         this->history_list.push_back(text_buffer);
         return this->lexer.tokens;
     }

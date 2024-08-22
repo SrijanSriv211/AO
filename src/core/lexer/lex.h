@@ -26,7 +26,7 @@ public:
     };
 
 public:
-    lex(const std::string& code, const bool& break_at_error=true, const bool& unescape_strings=true);
+    lex(const std::string& code, const bool& break_at_error=true, const bool& unescape_strings=true, const bool& get_env_var=true, const bool& do_math=true);
     void print_error();
 
 public:
@@ -39,11 +39,13 @@ private:
     std::vector<token> reduce_toks(const std::vector<token>& toks);
 
 private:
+    bool do_math;
+    bool get_env_var;
     bool break_at_error;
     bool unescape_strings;
     std::map<std::string, std::string> escape_chars = {};
     std::regex math_re = std::regex(R"(\(*\d+(?:[_\d]*)\)*(?:\s*[-+*/]\s*\(*\d+(?:[_\.\d]*)\)*)*)");
-    std::regex str_re = std::regex(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*')");
+    std::regex str_re = std::regex(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`)");
     std::regex identifier_re = std::regex(R"([\w\d_\-.+*/]+)");
     std::regex symbol_re = std::regex(R"([(),;?@!:>]+)");
     std::regex extras_re = std::regex(R"([ ]+|#.*|.+)"); // comments and white spaces

@@ -3,7 +3,7 @@
 
 #include "console/console.h"
 
-lex::lex(const std::string& code, const bool& break_at_error, const bool& unescape_strings)
+lex::lex(const std::string& code, const bool& break_at_error, const bool& unescape_strings, const bool& get_env_var, const bool& do_math)
 {
     this->escape_chars = {
         {"\\\\", "\\"},
@@ -19,9 +19,11 @@ lex::lex(const std::string& code, const bool& break_at_error, const bool& unesca
         {"\\f", "\f"}
     };
 
+    this->do_math = do_math;
+    this->get_env_var = get_env_var;
     this->break_at_error = break_at_error;
     this->unescape_strings = unescape_strings;
-    std::regex re(R"(\(*\d+(?:[_\d]*)\)*(?:\s*[-+*/]\s*\(*\d+(?:[_\.\d]*)\)*)*|\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|[\w\d_\-.+*/]+|[(),;?@!:>]|[ ]+|#.*|.+)");
+    std::regex re(R"(\(*\d+(?:[_\d]*)\)*(?:\s*[-+*/]\s*\(*\d+(?:[_\.\d]*)\)*)*|\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[\w\d_\-.+*/]+|[(),;?@!:>]|[ ]+|#.*|.+)");
 
     std::vector<std::string> toks = this->tokenizer(code, re);
     this->parse(toks);
