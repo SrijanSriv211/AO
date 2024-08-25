@@ -23,7 +23,9 @@ def rm(files):
 def join(lst, prefix="", separator=" "):
     return separator.join([prefix + i for i in lst])
 
-def get_files(path: str, ext):
+# https://stackoverflow.com/a/18351977/18121288
+# Though not widely known, str.endswith also accepts a tuple. You don't need to loop.
+def get_files(path: str, ext: tuple):
     return [os.path.join(path, file) for path, _, files in os.walk(path) for file in files if file.endswith(ext)]
 
 def create_unique_name(filepath: str):
@@ -72,7 +74,7 @@ def remove_hash(cache):
         json.dump(cache, f, indent=4)
 
 def create_index_cache():
-    cpp_files = get_files("src", ".cpp")
+    cpp_files = get_files("src", (".cpp", ".c"))
     cache = [
         {
             "name": i,
