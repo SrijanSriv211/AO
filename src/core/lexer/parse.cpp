@@ -107,13 +107,14 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
     {
         // ampersand just after a string literal will mean that string is to be evaluated into a `IDENTIFIER` or an `EXPR`,
         // the string literals are used to define some ID or EXPR with spaces or other symbols which are a part of that token,
-        // therefore by placing ampersand just after the ending string literal will set the string to be evaluable
-        if (toks[i].type == lex::STRING && toks[i+1].type == lex::AMPERSAND && this->is_math_expr(toks[i].name))
-            tok = {this->math(toks[i].name), lex::EXPR};
-
+        // therefore by placing ampersand just after the ending string literal will set the string to be evaluable,
         // if the token name is not a math expression then set it as an ID.
-        else if (toks[i].type == lex::STRING && toks[i+1].type == lex::AMPERSAND && !this->is_math_expr(toks[i].name))
-            tok = {toks[i].name.substr(1, toks[i].name.size() - 2), lex::IDENTIFIER};
+        if (toks[i].name.size() >= 3 && toks[i].type == lex::STRING && toks[i+1].type == lex::AMPERSAND)
+        {
+            std::string trimmed_str = strings::trim(toks[i].name, 1, 2);
+            tok = this->is_math_expr(trimmed_str) ? lex::token({this->math(trimmed_str), lex::EXPR}) : lex::token({trimmed_str, lex::IDENTIFIER});
+            i++;
+        }
 
         // check if string is env var string, a env var string in AO is defined by `env_var_name`, for eg, `username` -> SrijanSrivastava
         else if (toks[i].type == lex::STRING && toks[i].name.front() == '`' && toks[i].name.back() == '`' && toks[i].name.size() >= 3)
