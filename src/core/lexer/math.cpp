@@ -2,19 +2,15 @@
 #include "lex.h"
 
 #include "strings/strings.h"
+#include "tinyexpr/tinyexpr.h"
 
 std::string lex::math(const std::string& expression)
 {
+    // preprocess expression
     std::string expr = strings::replace_all(expression, "_", "");
     expr = strings::replace_all(expr, " ", "");
 
-    std::regex re(R"([-+*/()]+?|\d*\.?\d+)");
-    std::vector<std::string> toks = this->tokenizer(expr, re);
-
-    // for (std::vector<std::string>::size_type i = 0; i < toks.size(); i++)
-    // {
-    //     std::cout << "(" << toks[i] << ")\n";
-    // }
-
-    return expr;
+    // use tinyexpr to evaluate the expression
+    double result = te_interp(expr.c_str(), 0);
+    return std::format("{}", result);
 }
