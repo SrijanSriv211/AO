@@ -76,4 +76,21 @@ namespace strings
 
         return false;
     }
+
+    bool in_array(const std::string& str, const std::vector<std::string>& iter)
+    {
+        return std::find(iter.begin(), iter.end(), str) != iter.end();
+    }
+
+    // return false if any `str` is found not to be present in the iter
+    bool only(const std::string& str, const std::vector<std::string>& iter)
+    {
+        for (int i = 0; i < str.size(); i++)
+        {
+            if (!in_array(std::string(1, str[i]), iter))
+                return false;
+        }
+
+        return true;
+    }
 }

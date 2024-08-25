@@ -10,4 +10,6 @@ namespace strings
     bool is_empty(const std::string& str);
     bool any(const std::string& str, const std::vector<std::string>& iter, const bool& strict=false);
     bool any(const int& str, const std::vector<int>& iter);
+    bool in_array(const std::string& str, const std::vector<std::string>& iter);
+    bool only(const std::string& str, const std::vector<std::string>& iter);
 }
