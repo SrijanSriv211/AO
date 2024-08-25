@@ -2,6 +2,12 @@
 #include "lex.h"
 
 #include "strings/strings.h"
+#include "console/console.h"
+
+bool lex::is_math_expr(const std::string& str)
+{
+    return strings::only(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "*", "/", "(", ")", "_", ".", " "});
+}
 
 bool lex::is_valid_string(const std::string& str)
 {
@@ -30,18 +36,16 @@ bool lex::is_valid_string(const std::string& str)
     return true;
 }
 
-void lex::unescape_string(std::string& str)
+std::string lex::unescape_string(const std::string& str)
 {
+    std::string unescaped_str = str;
     for (const auto& [key, val] : this->escape_chars)
     {
-        if (str.find(key) != std::string::npos)
-            str = strings::replace_all(str, key, val);
+        if (unescaped_str.find(key) != std::string::npos)
+            unescaped_str = strings::replace_all(unescaped_str, key, val);
     }
-}
 
-bool lex::is_env_var_string(const std::string& str)
-{
-    return str.front() == '`' && str.size() >= 3 && this->get_env_var;
+    return unescaped_str;
 }
 
 lex::token lex::get_env_var_val(const std::string& str)
@@ -60,4 +64,9 @@ lex::token lex::get_env_var_val(const std::string& str)
     }
 
     return {str, lex::STRING};
+}
+
+void lex::print_error()
+{
+    console::print(this->error, console::color::BLACK, console::color::LIGHT_RED);
 }
