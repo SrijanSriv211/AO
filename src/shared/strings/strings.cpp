@@ -45,6 +45,29 @@ namespace strings
         return replaced_str;
     }
 
+    std::string trim(const std::string& str, const std::string& trim_char)
+    {
+        // find the first non-trim_char character
+        const std::string::size_type str_begin = str.find_first_not_of(trim_char);
+
+        if (str_begin == std::string::npos)
+            return str;
+
+        // find the last non-trim_char character
+        const std::string::size_type str_end = str.find_last_not_of(trim_char);
+        const std::string::size_type str_range = str_end - str_begin + 1;
+
+        // return the substring without leading and trailing trim_char
+        return str.substr(str_begin, str_range);
+    }
+
+    // `first_n` - first 'n' chars of the str
+    // `last_n` - last 'n' chars of the str
+    std::string trim(const std::string& str, const std::size_t& first_n, const std::size_t& last_n)
+    {
+        return str.substr(first_n, str.size() - last_n);
+    }
+
     bool is_empty(const std::string& str)
     {
         return all_of(str.begin(), str.end(), ::isspace) || str.empty();
