@@ -39,7 +39,7 @@ namespace strings
             if (replaced_str.find(old_str) == std::string::npos)
                 break;
 
-            replaced_str.replace(str.find(old_str), old_str.length(), new_str);
+            replaced_str.replace(replaced_str.find(old_str), old_str.length(), new_str);
         }
 
         return replaced_str;
