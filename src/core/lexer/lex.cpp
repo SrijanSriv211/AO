@@ -1,10 +1,7 @@
 #include "aopch.h"
 #include "lex.h"
 
-#include "console/console.h"
-
-// lex::lex(const std::string& str, const bool& break_at_error, const bool& unescape_strings, const bool& get_env_var, const bool& do_math)
-lex::lex(const std::string& str, const bool& break_at_error, const bool& eval_tokens)
+lex::lex(const std::string& str, const bool& break_at_error, const bool& evaluate_tokens)
 {
     this->escape_chars = {
         {"\\\\", "\\"},
@@ -20,10 +17,8 @@ lex::lex(const std::string& str, const bool& break_at_error, const bool& eval_to
         {"\\f", "\f"}
     };
 
-    // this->do_math = do_math;
-    // this->get_env_var = get_env_var;
     this->break_at_error = break_at_error;
-    // this->unescape_strings = unescape_strings;
+    this->evaluate_tokens = evaluate_tokens;
     std::regex re(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[-_/.a-zA-Z]+|\d+(?:_\d+)*\.?\d*|[-+*/()]+?|[(),;&?@!:>]|[ ]+|#.*|.+)");
 
     std::vector<std::string> toks = this->tokenizer(str, re);
@@ -42,9 +37,4 @@ std::vector<std::string> lex::tokenizer(const std::string& str, const std::regex
         toks.push_back(it->str());
 
     return toks;
-}
-
-void lex::print_error()
-{
-    console::print(this->error, console::color::BLACK, console::color::LIGHT_RED);
 }
