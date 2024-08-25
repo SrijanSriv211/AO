@@ -3,7 +3,8 @@
 
 #include "console/console.h"
 
-lex::lex(const std::string& code, const bool& break_at_error, const bool& unescape_strings, const bool& get_env_var, const bool& do_math)
+// lex::lex(const std::string& str, const bool& break_at_error, const bool& unescape_strings, const bool& get_env_var, const bool& do_math)
+lex::lex(const std::string& str, const bool& break_at_error, const bool& eval_tokens)
 {
     this->escape_chars = {
         {"\\\\", "\\"},
@@ -19,14 +20,14 @@ lex::lex(const std::string& code, const bool& break_at_error, const bool& unesca
         {"\\f", "\f"}
     };
 
-    this->do_math = do_math;
-    this->get_env_var = get_env_var;
+    // this->do_math = do_math;
+    // this->get_env_var = get_env_var;
     this->break_at_error = break_at_error;
-    this->unescape_strings = unescape_strings;
-    std::regex re(R"(\(*\d+(?:[_\d]*)\)*(?:\s*[-+*/]\s*\(*\d+(?:[_\.\d]*)\)*)*|\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[\w\d_\-.+*/]+|[(),;?@!:>]|[ ]+|#.*|.+)");
+    // this->unescape_strings = unescape_strings;
+    std::regex re(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[-_/.a-zA-Z]+|\d+(?:_\d+)*\.?\d*|[-+*/()]+?|[(),;&?@!:>]|[ ]+|#.*|.+)");
 
-    std::vector<std::string> toks = this->tokenizer(code, re);
-    this->parse(toks);
+    std::vector<std::string> toks = this->tokenizer(str, re);
+    this->assign_token_type(toks);
     // push EOL in tokens just to make sure that `tokens.size()` is not zero.
     // because it will be used in rendering by `readf`.
     tokens.push_back({"", lex::EOL});
