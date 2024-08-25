@@ -39,7 +39,7 @@ namespace console
         readf::cursor_vec3 vector3 = readf::cursor_vec3(0, 0, 0);
         std::map<lex::token_type, console::color> color_codes = {};
         std::map<std::pair<WORD, DWORD>, std::function<void()>> key_codes = {};
-        lex lexer = lex("", false, false, false, false);
+        lex lexer = lex("", false, false);
         std::pair<int, int> diff_token_idx;
         std::vector<int> whitepoints = {};
 

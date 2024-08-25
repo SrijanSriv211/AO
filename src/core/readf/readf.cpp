@@ -27,6 +27,7 @@ namespace console
             { lex::STRING, console::LIGHT_YELLOW },
             { lex::EXPR, console::LIGHT_CYAN },
             { lex::BOOL, console::CYAN },
+            { lex::AMPERSAND, console::LIGHT_BLUE },
             { lex::FLAGS, console::GRAY },
             { lex::SYMBOL, console::GRAY },
             { lex::COMMENT, console::GRAY },
@@ -114,7 +115,7 @@ namespace console
             this->set_cursor_position((short)vector3.x);
         }
 
-        this->lexer = lex(text_buffer, false, true, true, true);
+        this->lexer = lex(text_buffer, false, true);
         this->history_list.push_back(text_buffer);
         return this->lexer.tokens;
     }
