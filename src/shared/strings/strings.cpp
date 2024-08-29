@@ -108,7 +108,7 @@ namespace strings
     // return false if any `str` is found not to be present in the iter
     bool only(const std::string& str, const std::vector<std::string>& iter)
     {
-        for (int i = 0; i < str.size(); i++)
+        for (std::vector<std::string>::size_type i = 0; i < str.size(); i++)
         {
             if (!in_array(std::string(1, str[i]), iter))
                 return false;

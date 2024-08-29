@@ -71,12 +71,12 @@ namespace console
         if (this->vector3.i <= 0)
             return;
 
-        size_t whitespace_pos = text_buffer.rfind(' ', this->vector3.x - init_cursor_pos.X - 1);
-        if (whitespace_pos != std::string::npos && whitespace_pos == this->vector3.x - init_cursor_pos.X - 1)
+        const size_t whitespace_pos = text_buffer.rfind(' ', this->vector3.x - init_cursor_pos.X - 1);
+        if (whitespace_pos != std::string::npos && static_cast<int>(whitespace_pos) == this->vector3.x - init_cursor_pos.X - 1)
             this->handle_backspace();
 
         // if cannot find previous word idx, then move to start of the str otherwise move to prev word
-        size_t previous_word_idx = text_buffer.rfind(' ', this->vector3.x - init_cursor_pos.X - 1);
+        const size_t previous_word_idx = text_buffer.rfind(' ', this->vector3.x - init_cursor_pos.X - 1);
         int length = previous_word_idx == std::string::npos ? this->vector3.x - init_cursor_pos.X : this->vector3.x - init_cursor_pos.X - previous_word_idx - 1;
 
         this->vector3.x -= length;
@@ -88,7 +88,7 @@ namespace console
 
     void readf::handle_delete()
     {
-        if (this->vector3.i >= text_buffer.length())
+        if (this->vector3.i >= static_cast<int>(text_buffer.length()))
             return;
 
         text_buffer.erase(this->vector3.x - init_cursor_pos.X, 1);
@@ -97,19 +97,27 @@ namespace console
 
     void readf::handle_ctrl_delete()
     {
-        if (this->vector3.i >= text_buffer.length())
+        if (this->vector3.i >= static_cast<int>(text_buffer.length()))
             return;
 
-        size_t whitespace_pos = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
-        if (whitespace_pos != std::string::npos && whitespace_pos == this->vector3.x - init_cursor_pos.X)
+        const size_t whitespace_pos = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
+        if (whitespace_pos != std::string::npos && static_cast<int>(whitespace_pos) == this->vector3.x - init_cursor_pos.X)
             this->handle_delete();
 
         // if cannot find next word idx, then move to end of the str otherwise move to next word
-        size_t next_word_idx = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
+        const size_t next_word_idx = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
         int length = next_word_idx == std::string::npos ? text_buffer.size() - (this->vector3.x - init_cursor_pos.X) : next_word_idx - (this->vector3.x - init_cursor_pos.X);
 
         text_buffer.erase(this->vector3.x - init_cursor_pos.X, length);
         this->update_console();
+    }
+
+    void readf::handle_up_arrow()
+    {
+    }
+
+    void readf::handle_down_arrow()
+    {
     }
 
     void readf::handle_left_arrow()
@@ -126,12 +134,12 @@ namespace console
         if (this->vector3.i <= 0)
             return;
 
-        size_t whitespace_pos = text_buffer.rfind(' ', this->vector3.i - 1);
-        if (whitespace_pos != std::string::npos && whitespace_pos == this->vector3.i - 1)
+        const size_t whitespace_pos = text_buffer.rfind(' ', this->vector3.i - 1);
+        if (whitespace_pos != std::string::npos && static_cast<int>(whitespace_pos) == this->vector3.i - 1)
             this->handle_left_arrow();
 
         // if cannot find previous word idx, then move to start of the str otherwise move to prev word
-        size_t previous_word_idx = text_buffer.rfind(' ', this->vector3.i - 1);
+        const size_t previous_word_idx = text_buffer.rfind(' ', this->vector3.i - 1);
         int length = previous_word_idx == std::string::npos ? this->vector3.i : this->vector3.i - previous_word_idx - 1;
 
         this->vector3.x -= length;
@@ -140,7 +148,7 @@ namespace console
 
     void readf::handle_right_arrow()
     {
-        if (this->vector3.i >= text_buffer.size())
+        if (this->vector3.i >= static_cast<int>(text_buffer.size()))
             return;
 
         this->vector3.i++;
@@ -149,15 +157,15 @@ namespace console
 
     void readf::handle_ctrl_right_arrow()
     {
-        if (this->vector3.i >= text_buffer.size())
+        if (this->vector3.i >= static_cast<int>(text_buffer.size()))
             return;
 
-        size_t whitespace_pos = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
-        if (whitespace_pos != std::string::npos && whitespace_pos == this->vector3.x - init_cursor_pos.X)
+        const size_t whitespace_pos = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
+        if (whitespace_pos != std::string::npos && static_cast<int>(whitespace_pos) == this->vector3.x - init_cursor_pos.X)
             this->handle_right_arrow();
 
         // if cannot find next word idx, then move to end of the str otherwise move to next word
-        size_t next_word_idx = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
+        const size_t next_word_idx = text_buffer.find(' ', this->vector3.x - init_cursor_pos.X);
         int length = next_word_idx == std::string::npos ? text_buffer.size() - (this->vector3.x - init_cursor_pos.X) : next_word_idx - (this->vector3.x - init_cursor_pos.X);
 
         this->vector3.x += length;
