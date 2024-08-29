@@ -1,10 +1,14 @@
 #include "aopch.h"
 #include "entrypoint.h"
+#include "ao.h"
 
 #include "argparse/argparse.h"
 #include "fileio/foldersystem.h"
 #include "fileio/filesystem.h"
 #include "console/console.h"
+
+#include "core/readf/readf.h"
+#include "core/execute/execute.h"
 
 int take_entry(const std::vector<std::string> args)
 {
@@ -21,7 +25,11 @@ int take_entry(const std::vector<std::string> args)
     else
     {
         setup(); // show a setup screen with some basic details on first boot
-        exec_code(NULL);
+        AO::clear_console();
+        AO::print_prompt();
+
+        console::readf readf = console::readf({""});
+        execute(readf.takeinput());
     }
 
     return 0;

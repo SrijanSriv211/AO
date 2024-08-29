@@ -1,8 +1,13 @@
 #include "aopch.h"
 #include "entrypoint.h"
+#include "ao.h"
 
 #include "argparse/argparse.h"
 #include "console/console.h"
+
+#include "core/lexer/lex.h"
+#include "core/server/server.h"
+#include "core/execute/execute.h"
 
 std::vector<std::string> load_file(const std::string& filename)
 {
@@ -36,7 +41,11 @@ int exec_parsed_args(argparse& parser, const std::vector<argparse::parsed_argume
             init_folders();
 
         else if (std::find(arg.names.begin(), arg.names.end(), "--api") != arg.names.end())
-            start_server();
+        {
+            setup(); // show a setup screen with some basic details on first boot
+            AO::clear_console();
+            start_server("127.0.0.1", 8000);
+        }
 
         else if (arg.names.front().ends_with(".ao"))
         {
@@ -44,9 +53,8 @@ int exec_parsed_args(argparse& parser, const std::vector<argparse::parsed_argume
 
             for (std::vector<std::string>::size_type i = 0; i < code.size(); i++)
             {
-                std::string* line = new std::string(code[i]);
-                exec_code(line);
-                delete line;
+                lex lexer(code[i]);
+                execute(lexer.tokens);
             }
         }
 
