@@ -1,12 +1,10 @@
-#include <cstring>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
 #include "aopch.h"
 #include "server.h"
 #include "ao.h"
 
 #include "core/entrypoint/entrypoint.h"
+#include "core/execute/execute.h"
+#include "core/readf/readf.h"
 
 #include "console/console.h"
 #include "strings/strings.h"
@@ -167,7 +165,9 @@ void start_server(const std::string& ip_address, const int& port)
             else
             {
                 AO::print_prompt();
-                std::cout << body << std::endl;
+
+                console::readf readf = console::readf({""});
+                execute(readf.render_text(body));
 
                 std::string response = process_input(body, "ok", 200);
                 send_response(client_socket, response);

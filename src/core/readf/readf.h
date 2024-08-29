@@ -13,6 +13,7 @@ namespace console
     public:
         readf(std::vector<std::string> suggestions);
         std::vector<lex::token> takeinput();
+        std::vector<lex::token> render_text(const std::string& input);
 
     private:
         struct cursor_vec3
@@ -30,8 +31,8 @@ namespace console
         };
 
         COORD init_cursor_pos;
-        int suggestion_idx;
-        int history_idx;
+        std::vector<std::string>::size_type suggestion_idx;
+        std::vector<std::string>::size_type history_idx;
         std::vector<std::string> suggestions;
         std::string text_buffer;
         std::string ren_text_buffer; // rendered text buffer
@@ -76,6 +77,8 @@ namespace console
         void handle_ctrl_backspace();
         void handle_delete();
         void handle_ctrl_delete();
+        void handle_up_arrow();
+        void handle_down_arrow();
         void handle_left_arrow();
         void handle_ctrl_left_arrow();
         void handle_right_arrow();

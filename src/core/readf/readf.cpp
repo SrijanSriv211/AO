@@ -55,6 +55,9 @@ namespace console
             { {VK_DELETE, 0}, [this](){ this->handle_delete(); } },
             { {VK_DELETE, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_delete(); } },
 
+            { {VK_UP, 0}, [this](){ this->handle_up_arrow(); } },
+            { {VK_DOWN, 0}, [this](){ this->handle_down_arrow(); } },
+
             { {VK_RIGHT, 0}, [this](){ this->handle_right_arrow(); } },
             { {VK_RIGHT, LEFT_CTRL_PRESSED}, [this](){ this->handle_ctrl_right_arrow(); } },
 
@@ -117,6 +120,16 @@ namespace console
 
         this->lexer = lex(text_buffer, false, true);
         this->history_list.push_back(text_buffer);
+        return this->lexer.tokens;
+    }
+
+    std::vector<lex::token> readf::render_text(const std::string& input)
+    {
+        this->text_buffer = input;
+        this->update_console(false);
+        std::cout << std::endl;
+
+        this->lexer = lex(text_buffer, false, true);
         return this->lexer.tokens;
     }
 }
