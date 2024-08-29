@@ -45,6 +45,7 @@ int exec_parsed_args(argparse& parser, const std::vector<argparse::parsed_argume
             setup(); // show a setup screen with some basic details on first boot
             AO::clear_console();
             start_server("127.0.0.1", 8000);
+            // curl -X POST http://127.0.0.1:8000 -d "shout Hello world!"
         }
 
         else if (arg.names.front().ends_with(".ao"))
