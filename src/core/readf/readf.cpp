@@ -32,7 +32,7 @@ namespace console
             { lex::SYMBOL, console::GRAY },
             { lex::COMMENT, console::GRAY },
             { lex::SEMICOLON, console::GRAY },
-            { lex::HIDDEN, console::GREEN }
+            { lex::INTERNAL, console::GREEN }
         };
 
         // init key codes

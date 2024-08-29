@@ -12,7 +12,7 @@ public:
         WHITESPACE, // 4
         IDENTIFIER, // 5
         SEMICOLON, // 6
-        HIDDEN, // 7
+        INTERNAL, // 7
         STRING, // 8
         SYMBOL, // 9
         FLAGS, // 10

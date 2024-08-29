@@ -26,7 +26,7 @@ void lex::assign_token_type(const std::vector<std::string>& toks)
             tok = {str, lex::AMPERSAND};
 
         else if (str.starts_with("_"))
-            tok = {str, lex::HIDDEN};
+            tok = {str, lex::INTERNAL};
 
         else if (strings::any(str, {"true", "false"}, true))
             tok = {str, lex::BOOL};
