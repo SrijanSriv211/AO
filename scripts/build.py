@@ -6,6 +6,7 @@ CONFIG = {
     "ICON_PATH": "src/ico.o",
     "INCLUDES": ["src/", "src/shared/", "src/vendor/"],
     "DEFINES": ["VERSION=2024.3", "STD=2.8"],
+    "EXTRAS": "-lws2_32",
     "STD": "c++20",
     "OUTPATH": "bin\\AO.exe",
     "OPTIMIZATION": "-O2",
@@ -14,7 +15,7 @@ CONFIG = {
         ("src/ico.o", "windres src/ico.rc -O coff -o src/ico.o") # create ico.o containing the data for AO icon
     ]
 }
-COMMON = lambda: f"{join(CONFIG["INCLUDES"], "-I")} {join(CONFIG["DEFINES"], "-D")} {CONFIG["OPTIMIZATION"]} -std={CONFIG["STD"]}"
+COMMON = lambda: f"{join(CONFIG["INCLUDES"], "-I")} {CONFIG["EXTRAS"]} {join(CONFIG["DEFINES"], "-D")} {CONFIG["OPTIMIZATION"]} -std={CONFIG["STD"]} -Wall"
 
 def get_objs(file: str):
     o_name = f"obj\\{create_unique_name(file)}.o"
@@ -49,7 +50,7 @@ def compile_ao():
 
     delete_stale_objects()
     obj_files = [get_objs(f) for f in get_files(CONFIG["SRC_PATH"], (".cpp", ".c"))]
-    os.system(f"g++ {CONFIG["ICON_PATH"]} {join(obj_files)} {COMMON()} -Wall -o {CONFIG["OUTPATH"]}")
+    os.system(f"g++ {CONFIG["ICON_PATH"]} {join(obj_files)} {COMMON()} -o {CONFIG["OUTPATH"]}")
 
     calc_total_time(time.perf_counter() - start)
 

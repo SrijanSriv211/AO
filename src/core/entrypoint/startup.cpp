@@ -35,6 +35,9 @@ int exec_parsed_args(argparse& parser, const std::vector<argparse::parsed_argume
         else if (std::find(arg.names.begin(), arg.names.end(), "--init") != arg.names.end())
             init_folders();
 
+        else if (std::find(arg.names.begin(), arg.names.end(), "--api") != arg.names.end())
+            start_server();
+
         else if (arg.names.front().ends_with(".ao"))
         {
             std::vector<std::string> code = load_file(arg.names.front());

@@ -7,4 +7,5 @@ namespace AO
     extern const std::filesystem::path ao_env_path;
     std::string get_root_path();
     void clear_console();
+    void print_prompt();
 }

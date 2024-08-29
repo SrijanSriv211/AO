@@ -10,7 +10,8 @@ int take_entry(const std::vector<std::string> args)
 {
     argparse parser = argparse("AO", "A developer tool made by a developer for developers", unrecognized_argument_error);
     parser.add({"-h", "--help", "/?", "-?"}, "Show help message", "", true, false);
-    parser.add({"-i", "--init"}, "Initialize AO in current directory", "", true, false);
+    parser.add({"-i", "--init"}, "Initialize in current directory", "", true, false);
+    parser.add({"-a", "--api"}, "Run in server mode and accept API requests", "", true, false);
 
     std::vector<argparse::parsed_argument> parsed_args = parser.parse(args);
 

@@ -2,8 +2,6 @@
 #include "entrypoint.h"
 #include "ao.h"
 
-#include "datetime/datetime.h"
-
 #include "core/readf/readf.h"
 #include "core/lexer/lex.h"
 
@@ -13,10 +11,7 @@ void exec_code(const std::string* code)
     if (code == nullptr)
     {
         AO::clear_console();
-
-        console::print(std::filesystem::current_path().string(), console::color::LIGHT_WHITE);
-        console::print(datetime::datetime("%H:%M:%S"), console::color::LIGHT_WHITE, false);
-        console::print("$ ", console::color::LIGHT_WHITE, false);
+        AO::print_prompt();
 
         console::readf readf = console::readf({""});
         std::vector<lex::token> tokens = readf.takeinput();
