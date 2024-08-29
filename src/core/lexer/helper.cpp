@@ -6,7 +6,8 @@
 
 bool lex::is_math_expr(const std::string& str)
 {
-    return strings::only(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "*", "/", "(", ")", "_", ".", " "});
+    return strings::only(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "*", "/", "(", ")", "_", ".", " "}) &&
+           strings::any(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"});
 }
 
 bool lex::is_valid_string(const std::string& str)
