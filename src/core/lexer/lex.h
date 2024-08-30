@@ -45,6 +45,7 @@ private:
 
     token get_env_var_val(const std::string& str);
     bool is_math_expr(const std::string& str);
+    bool has_number(const std::string& str);
 
     std::string math(const std::string& expression);
 

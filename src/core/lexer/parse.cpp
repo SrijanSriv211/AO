@@ -79,6 +79,19 @@ std::vector<lex::token> lex::merge_tokens(const std::vector<lex::token>& toks)
             tok_type = lex::IDENTIFIER;
         }
 
+        else if (!this->has_number(tok_name) && tok_type == lex::EXPR)
+        {
+            // push the previous common tokens to the array
+            tokens.push_back({tok_name, IDENTIFIER});
+
+            // clear the concatenated tok_name and tok_type
+            tok_name.clear();
+            tok_type = UNKNOWN;
+        }
+
+        else if (strings::is_empty(tok_name) && !this->has_number(toks[i].name) && toks[i].type == lex::EXPR)
+            tokens.push_back({toks[i].name, IDENTIFIER});
+
         else if (!strings::is_empty(tok_name) && tok_type != lex::UNKNOWN)
         {
             // push the previous common tokens to the array
@@ -92,7 +105,6 @@ std::vector<lex::token> lex::merge_tokens(const std::vector<lex::token>& toks)
         // push the current tokens to the array
         else
             tokens.push_back(toks[i]);
-
     }
 
     return tokens;
@@ -121,7 +133,11 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
             tok = this->get_env_var_val(toks[i].name);
 
         else if (toks[i].type == lex::STRING)
-            tok = {this->unescape_string(toks[i].name), toks[i].type};
+        {
+            std::string unescaped_str = this->unescape_string(toks[i].name);
+            std::string trimmed_str = strings::trim(unescaped_str, 1, 2); // trim string literals from start and end
+            tok = {trimmed_str, toks[i].type};
+        }
 
         else if (toks[i].type == lex::EXPR)
             tok = {lex::math(toks[i].name), toks[i].type};
