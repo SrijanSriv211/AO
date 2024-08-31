@@ -28,7 +28,7 @@ namespace console
             { lex::EXPR, console::LIGHT_CYAN },
             { lex::BOOL, console::CYAN },
             { lex::AMPERSAND, console::LIGHT_BLUE },
-            { lex::FLAGS, console::GRAY },
+            { lex::FLAG, console::GRAY },
             { lex::SYMBOL, console::GRAY },
             { lex::COMMENT, console::GRAY },
             { lex::SEMICOLON, console::GRAY },

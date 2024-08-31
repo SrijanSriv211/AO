@@ -15,7 +15,7 @@ public:
         INTERNAL, // 7
         STRING, // 8
         SYMBOL, // 9
-        FLAGS, // 10
+        FLAG, // 10
         BOOL, // 11
         EXPR // 12
     };
@@ -38,15 +38,14 @@ private:
     void assign_token_type(const std::vector<std::string>& toks);
     std::vector<std::string> tokenizer(const std::string& str, const std::regex& re);
     std::vector<token> merge_tokens(const std::vector<token>& toks);
-    std::vector<token> eval_tokens(const std::vector<lex::token>& toks);
+    std::vector<token> eval_tokens(const std::vector<token>& toks);
 
     bool is_valid_string(const std::string& str);
-    std::string unescape_string(const std::string& str);
+    bool any_token_type(const lex::token_type& str, const std::vector<lex::token_type>& iter);
+    bool is_math_expr(const std::string& str);
 
     token get_env_var_val(const std::string& str);
-    bool is_math_expr(const std::string& str);
-    bool has_number(const std::string& str);
-
+    std::string unescape_string(const std::string& str);
     std::string math(const std::string& expression);
 
 private:
