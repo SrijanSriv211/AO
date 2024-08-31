@@ -4,14 +4,20 @@
 #include "strings/strings.h"
 #include "console/console.h"
 
-bool lex::is_math_expr(const std::string& str)
+bool lex::any_token_type(const lex::token_type& str, const std::vector<lex::token_type>& iter)
 {
-    return strings::only(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "*", "/", "(", ")", "_", ".", " "});
+    for (const lex::token_type& i : iter)
+    {
+        if (str == i)
+            return true;
+    }
+
+    return false;
 }
 
-bool lex::has_number(const std::string& str)
+bool lex::is_math_expr(const std::string& str)
 {
-    return strings::any(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"});
+    return strings::only(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "_", ".", "-", "+", "*", "/", "(", ")", " "});
 }
 
 bool lex::is_valid_string(const std::string& str)
