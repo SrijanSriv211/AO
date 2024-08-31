@@ -20,6 +20,11 @@ void setup()
         return;
 
     filesystem::write(initbootfile, "1");
+    run_setup();
+}
+
+void run_setup()
+{
     system("cls");
 
     // https://onlinetools.com/ascii/convert-text-to-ascii-art#tool

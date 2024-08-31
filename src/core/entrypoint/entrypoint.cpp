@@ -26,10 +26,14 @@ int take_entry(const std::vector<std::string> args)
     {
         setup(); // show a setup screen with some basic details on first boot
         AO::clear_console();
-        AO::print_prompt();
 
-        console::readf readf = console::readf({""});
-        execute(readf.takeinput());
+        int is_running = 1; // 1 = true; 0 = false
+        while (is_running)
+        {
+            AO::print_prompt();
+            console::readf readf = console::readf({""});
+            is_running = execute(readf.takeinput());
+        }
     }
 
     return 0;
