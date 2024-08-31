@@ -12,5 +12,10 @@ std::string lex::math(const std::string& expression)
 
     // use tinyexpr to evaluate the expression
     double result = te_interp(expr.c_str(), 0);
-    return std::format("{}", result);
+    std::string result_s = std::format("{}", result); // _s means converted to string
+
+    if (result_s == "nan")
+        return expr;
+
+    return result_s;
 }
