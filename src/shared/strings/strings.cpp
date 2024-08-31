@@ -3,7 +3,8 @@
 
 namespace strings
 {
-    char asciitolower(char in)
+    // https://stackoverflow.com/a/313990/18121288
+    char ascii_to_lower(char in)
     {
         if (in <= 'Z' && in >= 'A')
             return in - ('Z' - 'z');
@@ -13,7 +14,7 @@ namespace strings
     std::string lowercase(const std::string& str)
     {
         std::string result = str;
-        std::transform(result.begin(), result.end(), result.begin(), [](char c) { return asciitolower(c); });
+        std::transform(result.begin(), result.end(), result.begin(), [](char c) { return ascii_to_lower(c); });
         return result;
     }
 
@@ -30,19 +31,25 @@ namespace strings
         return str;
     }
 
+    // https://stackoverflow.com/a/29752943/18121288
     std::string replace_all(const std::string str, const std::string& old_str, const std::string& new_str)
     {
-        std::string replaced_str = str;
+        std::string new_string;
+        new_string.reserve(str.length()); // avoids a few memory allocations
 
-        while (true)
+        std::string::size_type last_pos = 0;
+        std::string::size_type find_pos;
+
+        while(std::string::npos != (find_pos = str.find(old_str, last_pos)))
         {
-            if (replaced_str.find(old_str) == std::string::npos)
-                break;
-
-            replaced_str.replace(replaced_str.find(old_str), old_str.length(), new_str);
+            new_string.append(str, last_pos, find_pos - last_pos);
+            new_string += new_str;
+            last_pos = find_pos + old_str.length();
         }
 
-        return replaced_str;
+        // Care for the rest after last occurrence
+        new_string += str.substr(last_pos);
+        return new_string;
     }
 
     std::string trim(const std::string& str, const std::string& trim_char)
@@ -100,6 +107,30 @@ namespace strings
         return false;
     }
 
+    // return true if any string from an iterable startswith the target string
+    bool startswith_any(const std::string& str, const std::vector<std::string>& iter)
+    {
+        for (const std::string& i : iter)
+        {
+            if (str.starts_with(i))
+                return true;
+        }
+
+        return false;
+    }
+
+    // return true if any string from an iterable endswith the target string
+    bool endswith_any(const std::string& str, const std::vector<std::string>& iter)
+    {
+        for (const std::string& i : iter)
+        {
+            if (str.ends_with(i))
+                return true;
+        }
+
+        return false;
+    }
+
     bool in_array(const std::string& str, const std::vector<std::string>& iter)
     {
         return std::find(iter.begin(), iter.end(), str) != iter.end();
@@ -115,5 +146,15 @@ namespace strings
         }
 
         return true;
+    }
+
+    bool is_number(const std::string& str)
+    {
+        return only(str, {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "_", "."});
+    }
+
+    bool is_orp(const std::string& str)
+    {
+        return only(str, {"-", "+", "*", "/", "(", ")"});
     }
 }
