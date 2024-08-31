@@ -16,7 +16,7 @@ void lex::assign_token_type(const std::vector<std::string>& toks)
         if (strings::is_empty(str))
             tok = {str, lex::WHITESPACE};
 
-        else if (str.starts_with('#'))
+        else if (str.starts_with("#"))
             tok = {str, lex::COMMENT};
 
         else if (str == ";")
@@ -25,16 +25,13 @@ void lex::assign_token_type(const std::vector<std::string>& toks)
         else if (str == "&")
             tok = {str, lex::AMPERSAND};
 
-        else if (str.starts_with("_"))
-            tok = {str, lex::INTERNAL};
-
         else if (strings::any(str, {"true", "false"}, true))
             tok = {str, lex::BOOL};
 
-        else if (strings::any(str, {">", "@", "!", "?", ":"}, true))
+        else if (strings::any(str, {">", "@"}, true))
             tok = {str, lex::SYMBOL};
 
-        else if (str.starts_with("\"") || str.starts_with("'") || str.starts_with("`"))
+        else if (strings::startswith_any(str, {"\"", "'", "`"}))
         {
             if (!this->is_valid_string(str))
                 break;
@@ -44,9 +41,6 @@ void lex::assign_token_type(const std::vector<std::string>& toks)
 
         else if (this->is_math_expr(str))
             tok = {str, lex::EXPR};
-
-        else if (str.starts_with("-") || str.starts_with("/"))
-            tok = {str, lex::FLAGS};
 
         else
             tok = {str, lex::IDENTIFIER};
@@ -67,33 +61,23 @@ std::vector<lex::token> lex::merge_tokens(const std::vector<lex::token>& toks)
 
     for (std::vector<lex::token>::size_type i = 0; i < toks.size(); i++)
     {
-        if (toks[i].type == lex::EXPR && toks[i+1].type == lex::EXPR)
-        {
+        if (this->any_token_type(toks[i].type, {lex::IDENTIFIER, lex::EXPR}) && this->any_token_type(toks[i+1].type, {lex::IDENTIFIER, lex::EXPR}))
             tok_name += strings::is_empty(tok_name) ? toks[i].name + toks[i+1].name : toks[i+1].name;
-            tok_type = lex::EXPR;
-        }
 
-        else if (toks[i].type == lex::IDENTIFIER && toks[i+1].type == lex::IDENTIFIER)
+        else if (!strings::is_empty(tok_name))
         {
-            tok_name += strings::is_empty(tok_name) ? toks[i].name + toks[i+1].name : toks[i+1].name;
-            tok_type = lex::IDENTIFIER;
-        }
+            if (this->is_math_expr(tok_name))
+                tok_type = lex::EXPR;
 
-        else if (!this->has_number(tok_name) && tok_type == lex::EXPR)
-        {
-            // push the previous common tokens to the array
-            tokens.push_back({tok_name, IDENTIFIER});
+            else if (tok_name.starts_with("_"))
+                tok_type = lex::INTERNAL;
 
-            // clear the concatenated tok_name and tok_type
-            tok_name.clear();
-            tok_type = UNKNOWN;
-        }
+            else if (strings::startswith_any(tok_name, {"-", "/"}))
+                tok_type = lex::FLAG;
 
-        else if (strings::is_empty(tok_name) && !this->has_number(toks[i].name) && toks[i].type == lex::EXPR)
-            tokens.push_back({toks[i].name, IDENTIFIER});
+            else
+                tok_type = lex::IDENTIFIER;
 
-        else if (!strings::is_empty(tok_name) && tok_type != lex::UNKNOWN)
-        {
             // push the previous common tokens to the array
             tokens.push_back({tok_name, tok_type});
 
@@ -104,7 +88,16 @@ std::vector<lex::token> lex::merge_tokens(const std::vector<lex::token>& toks)
 
         // push the current tokens to the array
         else
-            tokens.push_back(toks[i]);
+        {
+            if (strings::startswith_any(toks[i].name, {"-", "/"}) && toks[i].name.size() <= 1)
+                tokens.push_back({toks[i].name, lex::FLAG});
+
+            else if (strings::startswith_any(toks[i].name, {"_"}) && toks[i].name.size() <= 1)
+                tokens.push_back({toks[i].name, lex::INTERNAL});
+
+            else
+                tokens.push_back(toks[i]);
+        }
     }
 
     return tokens;
