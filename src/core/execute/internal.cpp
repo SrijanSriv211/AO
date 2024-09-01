@@ -73,17 +73,17 @@ void help()
 }
 
 std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
-    {{"--AOs1000"}, AOs1000},
-    {{"--setup"}, run_setup},
-    {{"--clear", "-cls"}, AO::clear_console},
-    {{"--BadApple"}, BadApple},
-    {{"--tommyViceCity"}, TommyViceCity},
-    {{"-R*6"}, Rockstar6},
-    {{"--itanimulli"}, itanimulli},
-    {{"--illuminati"}, illuminati},
-    {{"--withgreatpowercomesgreatresponsibility", "-wgpcgr"}, wgpcgr},
-    {{"--IAmIronMan", "-mrstark"}, mrstark},
-    {{"--itsmagicitsmagic"}, itsmagic},
+    {{"_AOs1000"}, AOs1000},
+    {{"-setup"}, run_setup},
+    {{"_clear", "-cls"}, AO::clear_console},
+    {{"_BadApple"}, BadApple},
+    {{"_tommyViceCity"}, TommyViceCity},
+    {{"_R*6"}, Rockstar6},
+    {{"_itanimulli"}, itanimulli},
+    {{"_illuminati"}, illuminati},
+    {{"_withgreatpowercomesgreatresponsibility", "-wgpcgr"}, wgpcgr},
+    {{"_IAmIronMan", "-mrstark"}, mrstark},
+    {{"_itsmagicitsmagic"}, itsmagic},
     {{"--diagxt", "-aod"}, diagxt},
     {{"--help", "-h", "-?", "/?"}, help}
 };

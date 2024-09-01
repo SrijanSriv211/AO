@@ -89,10 +89,10 @@ std::vector<lex::token> lex::merge_tokens(const std::vector<lex::token>& toks)
         // push the current tokens to the array
         else
         {
-            if (strings::startswith_any(toks[i].name, {"-", "/"}) && toks[i].name.size() <= 1)
+            if (strings::startswith_any(toks[i].name, {"-", "/"}))
                 tokens.push_back({toks[i].name, lex::FLAG});
 
-            else if (strings::startswith_any(toks[i].name, {"_"}) && toks[i].name.size() <= 1)
+            else if (strings::startswith_any(toks[i].name, {"_"}))
                 tokens.push_back({toks[i].name, lex::INTERNAL});
 
             else
@@ -126,11 +126,7 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
             tok = this->get_env_var_val(toks[i].name);
 
         else if (toks[i].type == lex::STRING)
-        {
-            std::string unescaped_str = this->unescape_string(toks[i].name);
-            std::string trimmed_str = strings::trim(unescaped_str, 1, 2); // trim string literals from start and end
-            tok = {trimmed_str, toks[i].type};
-        }
+            tok = {this->unescape_string(toks[i].name), toks[i].type};
 
         else if (toks[i].type == lex::EXPR)
             tok = {lex::math(toks[i].name), toks[i].type};

@@ -14,14 +14,21 @@ int execute(const std::vector<lex::token>& tokens)
         lex::token cmd = preprocessed_tokens[i].front();
         std::vector<lex::token> args = std::vector<lex::token>(preprocessed_tokens[i].begin() + 1, preprocessed_tokens[i].end());
 
-        if (cmd.type == lex::FLAG && get_command_func(cmd.name) != nullptr)
+        if ((cmd.type == lex::FLAG || cmd.type == lex::INTERNAL) && get_command_func(cmd.name) != nullptr)
             get_command_func(cmd.name)();
 
-        else if (((cmd.name == "-exit" || cmd.name == "-c") && cmd.type == lex::FLAG))
+        else if ((cmd.name == "_exit" || cmd.name == "-c") && (cmd.type == lex::FLAG || cmd.type == lex::INTERNAL))
             return 0;
 
-        else if (cmd.type == lex::STRING || cmd.type == lex::EXPR)
+        else if (cmd.type == lex::EXPR)
             std::cout << cmd.name << "\n\n";
+
+        else if (cmd.type == lex::STRING)
+        {
+            // trim string literals from start and end
+            std::string trimmed_str = strings::trim(cmd.name, 1, 2);
+            std::cout << trimmed_str << "\n\n";
+        }
 
         else
         {
