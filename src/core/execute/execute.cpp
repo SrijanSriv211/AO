@@ -1,5 +1,6 @@
 #include "aopch.h"
 #include "execute.h"
+#include "ao.h"
 
 #include "core/lexer/lex.h"
 #include "strings/strings.h"
@@ -19,6 +20,12 @@ int execute(const std::vector<lex::token>& tokens)
 
         else if ((cmd.name == "_exit" || cmd.name == "-c") && (cmd.type == lex::FLAG || cmd.type == lex::INTERNAL))
             return 0;
+
+        else if ((cmd.name == "_reload" || cmd.name == "-r" || cmd.name == "--refresh") && (cmd.type == lex::FLAG || cmd.type == lex::INTERNAL))
+        {
+            system(("call \"" + AO::get_root_path() + "\\AO.exe\"").c_str());
+            return 0;
+        }
 
         else if (cmd.type == lex::EXPR)
             std::cout << cmd.name << "\n\n";

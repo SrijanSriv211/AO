@@ -85,7 +85,8 @@ std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_IAmIronMan", "-mrstark"}, mrstark},
     {{"_itsmagicitsmagic"}, itsmagic},
     {{"--diagxt", "-aod"}, diagxt},
-    {{"--help", "-h", "-?", "/?"}, help}
+    {{"--help", "-h", "-?", "/?"}, help},
+    {{"_iws", "--init", "-iws"}, init_folders}
 };
 
 std::function<void()> get_command_func(const std::string& cmd)
