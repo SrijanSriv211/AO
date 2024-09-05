@@ -10,6 +10,8 @@
 #include "core/readf/readf.h"
 #include "core/execute/execute.h"
 
+bool print_new_line = true;
+
 int take_entry(const std::vector<std::string> args)
 {
     argparse parser = argparse("AO", "A developer tool made by a developer for developers", unrecognized_argument_error);
@@ -18,6 +20,8 @@ int take_entry(const std::vector<std::string> args)
     parser.add({"-a", "--api"}, "Run in server mode and accept API requests", "", true, false);
 
     std::vector<argparse::parsed_argument> parsed_args = parser.parse(args);
+    std::vector<std::string> history = {};
+    int is_running = 0; // 0 = false; 1 = true; 2 = reload
 
     if (parsed_args.size() > 0)
         return exec_parsed_args(parser, parsed_args);
@@ -26,17 +30,26 @@ int take_entry(const std::vector<std::string> args)
     {
         setup(); // show a setup screen with some basic details on first boot
         AO::clear_console();
+        is_running = 1;
 
-        int is_running = 1; // 1 = true; 0 = false
-        while (is_running)
+        while (is_running == 1)
         {
             AO::print_prompt();
-            console::readf readf = console::readf({""});
-            is_running = execute(readf.takeinput());
+            console::readf readf = console::readf({"shout", "echo", "test"});
+
+            readf.history_list = history;
+            std::vector<lex::token> input_tokens = readf.takeinput();
+            history = readf.history_list;
+
+            is_running = execute(input_tokens);
+
+            if (is_running == 1 && print_new_line)
+                std::cout << std::endl;
+            print_new_line = true;
         }
     }
 
-    return 0;
+    return is_running;
 }
 
 void unrecognized_argument_error(const std::string& err)
