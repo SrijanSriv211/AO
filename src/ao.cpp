@@ -49,7 +49,7 @@ namespace AO
     void print_prompt()
     {
         console::print(std::filesystem::current_path().string(), console::color::LIGHT_WHITE);
-        console::print(datetime::datetime("%H:%M:%S"), console::color::LIGHT_WHITE, false);
+        console::print(datetime::datetime("%H:%M:%S"), console::color::LIGHT_WHITE);
         console::print("$ ", console::color::LIGHT_WHITE, false);
     }
 }
