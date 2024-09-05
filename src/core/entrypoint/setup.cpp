@@ -11,6 +11,7 @@ void pause(const std::string& msg)
 {
     std::cout << msg;
     std::cin.get();
+    std::cout << std::endl;
 }
 
 void setup()
@@ -60,6 +61,36 @@ void run_setup()
     console::print("`https://github.com/SrijanSriv211/AO` ", console::color::LIGHT_WHITE, false);
     console::print("to get more information about AO ", console::color::GRAY, false);
     console::print("`settings.json`.", console::color::LIGHT_WHITE);
+    std::cout << std::endl;
+
+    pause("Press any key to continue.");
+
+    std::vector<std::string> AOsShortcutKeysHeading = {
+        "| Shortcut              | Comment                         |",
+        "| --------------------- | --------------------------------|"
+    };
+
+    std::vector<std::string> AOsShortcutKeys = {
+        "| `End`                 | Send end of line                |",
+        "| `Tab`                 | Change autocomplete suggestions |",
+        "| `Home`                | Send start of line              |",
+        "| `Escape`              | Clear suggestions               |",
+        "| `Delete`              | Delete succeeding character     |",
+        "| `Backspace`           | Delete previous character       |",
+        "| `LeftArrow`           | Backward one character          |",
+        "| `RightArrow`          | Forward one character           |",
+        "| `Shift`+`Escape`      | Clear input and suggestions     |",
+        "| `Ctrl`+`Enter`        | Accept current suggestion       |",
+        "| `Ctrl`+`Spacebar`     | Show current suggestions        |",
+        "| `Ctrl`+`Delete`       | Delete succeeding token         |",
+        "| `Ctrl`+`Backspace`    | Delete previous token           |",
+        "| `Ctrl`+`LeftArrow`    | Backward one token              |",
+        "| `Ctrl`+`RightArrow`   | Forward one token               |"
+    };
+
+    console::print("All the supported shortcut keys are the following:\n", console::color::WHITE);
+    console::print(strings::join("\n", AOsShortcutKeysHeading), console::color::LIGHT_WHITE);
+    console::print(strings::join("\n", AOsShortcutKeys), console::color::WHITE);
 
     pause("\nNow you know the basics of how to use AO.\nPress any key to continue.");
 
