@@ -9,6 +9,7 @@
 
 #include "core/readf/readf.h"
 #include "core/execute/execute.h"
+#include "core/settings/settings.h"
 
 bool print_new_line = true;
 
@@ -35,7 +36,7 @@ int take_entry(const std::vector<std::string> args)
         while (is_running == 1)
         {
             AO::print_prompt();
-            console::readf readf = console::readf({"shout", "echo", "test"});
+            console::readf readf = console::readf(load_settings()["suggestions"]);
 
             readf.history_list = history;
             std::vector<lex::token> input_tokens = readf.takeinput();
@@ -63,5 +64,27 @@ void init_folders()
 {
     foldersystem::create(".ao");
     foldersystem::create(".ao\\etc");
-    filesystem::write(".ao\\settings.json", "{}\n");
+
+    std::string settings_obj = R"({
+    "default_else_shell": true,
+    "startlist": [""],
+    "suggestions": ["${dirs}"],
+    "commands": [
+        {
+            "tasks": [
+                {
+                    "names": [""],
+                    "path": ""
+                }
+            ],
+            "help": "",
+            "usage": [""],
+            "do_index": true
+        }
+    ]
+}
+
+)";
+
+    filesystem::write(".ao\\settings.json", settings_obj);
 }
