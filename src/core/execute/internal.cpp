@@ -11,7 +11,6 @@ void AOs1000()
     console::print("AOs1000!", console::color::LIGHT_WHITE);
     console::print("CONGRATULATIONS! For hitting 1000 LINES OF CODE in AOs 1.3!", console::color::LIGHT_WHITE);
     console::print("It was my first ever program to reach these many LINES OF CODE!", console::color::LIGHT_WHITE);
-    std:: cout << std::endl;
 }
 
 void BadApple()
@@ -35,7 +34,6 @@ void Rockstar6()
 void itanimulli()
 {
     console::print("spelling mistake kid. It's illuminati", console::color::LIGHT_WHITE);
-    std::cout << std::endl;
 }
 
 void illuminati()
@@ -46,13 +44,11 @@ void illuminati()
 void wgpcgr()
 {
     console::print("true", console::get_console_back_color(), true);
-    std::cout << std::endl;
 }
 
 void mrstark()
 {
     console::print("And IAmBatMan.", console::get_console_back_color(), true);
-    std::cout << std::endl;
 }
 
 void itsmagic()
@@ -63,19 +59,17 @@ void itsmagic()
 void diagxt()
 {
     std::cout << "diagxt\n";
-    std::cout << std::endl;
 }
 
 void help()
 {
-    std::cout << "HELP\n";
-    std::cout << std::endl;
+    std::cout << "help\n";
 }
 
 std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_AOs1000"}, AOs1000},
     {{"--setup"}, run_setup},
-    {{"_clear", "-cls"}, AO::clear_console},
+    {{"cls", "_clear", "_cls"}, AO::clear_console},
     {{"_BadApple"}, BadApple},
     {{"_tommyViceCity"}, TommyViceCity},
     {{"_R*6"}, Rockstar6},
@@ -85,7 +79,7 @@ std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_IAmIronMan", "-mrstark"}, mrstark},
     {{"_itsmagicitsmagic"}, itsmagic},
     {{"--diagxt", "-aod"}, diagxt},
-    {{"--help", "-h", "-?", "/?"}, help},
+    {{"help", "--help", "-h", "-?", "/?"}, help},
     {{"_iws", "--init", "-iws"}, init_folders}
 };
 

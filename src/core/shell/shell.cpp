@@ -52,27 +52,6 @@ void shell::exec(const std::string& command)
     std::cout << output << std::endl;
 }
 
-void shell::close_handles()
-{
-    if (h_child_std_in_read)
-        CloseHandle(h_child_std_in_read);
-
-    if (h_child_std_in_write)
-        CloseHandle(h_child_std_in_write);
-
-    if (h_child_std_out_read)
-        CloseHandle(h_child_std_out_read);
-
-    if (h_child_std_out_write)
-        CloseHandle(h_child_std_out_write);
-
-    if (pi_proc_info.hProcess)
-        CloseHandle(pi_proc_info.hProcess);
-
-    if (pi_proc_info.hThread)
-        CloseHandle(pi_proc_info.hThread);
-}
-
 shell::shell()
 {
     SECURITY_ATTRIBUTES sa_attr;
@@ -108,5 +87,21 @@ shell::shell()
 
 shell::~shell()
 {
-    close_handles();
+    if (h_child_std_in_read)
+        CloseHandle(h_child_std_in_read);
+
+    if (h_child_std_in_write)
+        CloseHandle(h_child_std_in_write);
+
+    if (h_child_std_out_read)
+        CloseHandle(h_child_std_out_read);
+
+    if (h_child_std_out_write)
+        CloseHandle(h_child_std_out_write);
+
+    if (pi_proc_info.hProcess)
+        CloseHandle(pi_proc_info.hProcess);
+
+    if (pi_proc_info.hThread)
+        CloseHandle(pi_proc_info.hThread);
 }

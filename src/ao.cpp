@@ -1,6 +1,8 @@
 #include "aopch.h"
 #include "ao.h"
 
+#include "core/entrypoint/entrypoint.h"
+
 #include "console/console.h"
 #include "datetime/datetime.h"
 
@@ -31,6 +33,7 @@ namespace AO
     void clear_console()
     {
         system("cls");
+        print_new_line = false;
         std::string date_v = STR(VERSION);
         std::string semantic_v = STR(STD);
         console::print("AO " + date_v + " [Version " + semantic_v + "]  ", console::color::LIGHT_YELLOW, false);

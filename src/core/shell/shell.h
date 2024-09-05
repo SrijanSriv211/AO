@@ -13,6 +13,4 @@ private:
     HANDLE h_child_std_out_read = NULL;
     HANDLE h_child_std_out_write = NULL;
     PROCESS_INFORMATION pi_proc_info;
-
-    void close_handles();
 };

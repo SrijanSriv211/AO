@@ -19,26 +19,24 @@ int execute(const std::vector<lex::token>& tokens)
         lex::token cmd = preprocessed_tokens[i].front();
         std::vector<lex::token> args = std::vector<lex::token>(preprocessed_tokens[i].begin() + 1, preprocessed_tokens[i].end());
 
-        if ((cmd.type == lex::FLAG || cmd.type == lex::INTERNAL) && get_command_func(cmd.name) != nullptr)
-            get_command_func(cmd.name)();
+        std::function<void()> func = get_command_func(cmd.name);
+        if (func != nullptr)
+            func();
 
-        else if ((cmd.name == "exit" || cmd.name == "_exit" || cmd.name == "-c") && (cmd.type == lex::IDENTIFIER || cmd.type == lex::INTERNAL || cmd.type == lex::FLAG))
-            return 0;
+        else if (cmd.name == "exit" || cmd.name == "_exit" || cmd.name == "-c")
+            return 0; // 0 means that the user wants to exit AO
 
-        else if ((cmd.name == "reload" || cmd.name == "-r" || cmd.name == "_refresh") && (cmd.type == lex::IDENTIFIER || cmd.type == lex::INTERNAL || cmd.type == lex::FLAG))
-        {
-            system(("call \"" + AO::get_root_path() + "\\AO.exe\"").c_str());
-            return 0;
-        }
+        else if (cmd.name == "reload" || cmd.name == "-r" || cmd.name == "_refresh")
+            return 2; // 2 means that the user wants to reload AO
 
         else if (cmd.type == lex::EXPR)
-            std::cout << cmd.name << "\n\n";
+            std::cout << cmd.name << std::endl;
 
         else if (cmd.type == lex::STRING)
         {
             // trim string literals from start and end
             std::string trimmed_str = strings::trim(cmd.name, 1, 2);
-            std::cout << trimmed_str << "\n\n";
+            std::cout << trimmed_str << std::endl;
         }
 
         else
@@ -47,13 +45,11 @@ int execute(const std::vector<lex::token>& tokens)
             std::string cmd_s = cmd.name;
             std::vector<std::string> args_s(args.size());
             std::transform(args.begin(), args.end(), args_s.begin(), [](const lex::token& token) { return token.name; });
-            // system((cmd_s + " " + strings::join("", args_s)).c_str());
             shell_engine.exec(cmd_s + " " + strings::trim(strings::join("", args_s)));
-            std::cout << std::endl;
         }
     }
 
-    return 1;
+    return 1; // 1 means that the user continue using AO
 }
 
 std::vector<std::vector<lex::token>> preprocess_tokens(const std::vector<lex::token>& tokens)
