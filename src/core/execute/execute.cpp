@@ -3,7 +3,11 @@
 #include "ao.h"
 
 #include "core/lexer/lex.h"
+#include "core/shell/shell.h"
+
 #include "strings/strings.h"
+
+shell shell_engine;
 
 int execute(const std::vector<lex::token>& tokens)
 {
@@ -18,10 +22,10 @@ int execute(const std::vector<lex::token>& tokens)
         if ((cmd.type == lex::FLAG || cmd.type == lex::INTERNAL) && get_command_func(cmd.name) != nullptr)
             get_command_func(cmd.name)();
 
-        else if ((cmd.name == "_exit" || cmd.name == "-c") && (cmd.type == lex::FLAG || cmd.type == lex::INTERNAL))
+        else if ((cmd.name == "exit" || cmd.name == "_exit" || cmd.name == "-c") && (cmd.type == lex::IDENTIFIER || cmd.type == lex::INTERNAL || cmd.type == lex::FLAG))
             return 0;
 
-        else if ((cmd.name == "_reload" || cmd.name == "-r" || cmd.name == "--refresh") && (cmd.type == lex::FLAG || cmd.type == lex::INTERNAL))
+        else if ((cmd.name == "reload" || cmd.name == "-r" || cmd.name == "_refresh") && (cmd.type == lex::IDENTIFIER || cmd.type == lex::INTERNAL || cmd.type == lex::FLAG))
         {
             system(("call \"" + AO::get_root_path() + "\\AO.exe\"").c_str());
             return 0;
@@ -43,7 +47,9 @@ int execute(const std::vector<lex::token>& tokens)
             std::string cmd_s = cmd.name;
             std::vector<std::string> args_s(args.size());
             std::transform(args.begin(), args.end(), args_s.begin(), [](const lex::token& token) { return token.name; });
-            system((cmd_s + " " + strings::join("", args_s)).c_str());
+            // system((cmd_s + " " + strings::join("", args_s)).c_str());
+            shell_engine.exec(cmd_s + " " + strings::trim(strings::join("", args_s)));
+            std::cout << std::endl;
         }
     }
 
