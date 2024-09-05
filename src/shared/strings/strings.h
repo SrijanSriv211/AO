@@ -17,4 +17,5 @@ namespace strings
     bool only(const std::string& str, const std::vector<std::string>& iter);
     bool is_number(const std::string& str);
     bool is_orp(const std::string& str);
+    bool contains_eachother(const std::string& str1, const std::string& str2);
 }

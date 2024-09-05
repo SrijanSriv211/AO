@@ -157,4 +157,18 @@ namespace strings
     {
         return only(str, {"-", "+", "*", "/", "(", ")"});
     }
+
+    bool contains_eachother(const std::string& str1, const std::string& str2)
+    {
+        if (is_empty(str1) || is_empty(str2))
+            return false;
+
+        const size_t x = str1.find(str2);
+        const size_t y = str2.find(str1);
+
+        if (x == std::string::npos && y == std::string::npos)
+            return false;
+
+        return true;
+    }
 }
