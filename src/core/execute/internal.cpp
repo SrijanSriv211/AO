@@ -74,7 +74,7 @@ void help()
 
 std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_AOs1000"}, AOs1000},
-    {{"-setup"}, run_setup},
+    {{"--setup"}, run_setup},
     {{"_clear", "-cls"}, AO::clear_console},
     {{"_BadApple"}, BadApple},
     {{"_tommyViceCity"}, TommyViceCity},
