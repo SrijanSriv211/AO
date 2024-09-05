@@ -3,30 +3,32 @@
 
 #include "console/console.h"
 #include "strings/strings.h"
+#include "array/array.h"
 
 namespace console
 {
-    void readf::update_console(const bool& render_suggestions)
+    void readf::update_console(const bool& to_render_suggestions)
     {
         if (this->text_buffer == this->ren_text_buffer)
-            return;
-
-        this->clear_console();
-        this->render_tokens();
-
-        if (!render_suggestions)
             return;
 
         // if the cursor has reached the bottom of the window, then move it up by one point.
         // to ensure that the cursor is not going beyond the window which will crash the program.
         if (this->vector3.y >= this->console_window_height() - 1)
         {
+            std::cout << std::endl;
             this->vector3.y--;
             this->set_cursor_position(this->vector3.x);
-            std::cout << std::endl;
         }
 
+        this->clear_console();
+        this->render_tokens();
+
+        if (!to_render_suggestions || array::is_empty(this->suggestion_list))
+            return;
+
         this->clear_suggestions();
+        this->get_suitable_suggestions(12);
         this->render_suggestions();
     }
 
@@ -92,13 +94,5 @@ namespace console
             render_token(i, 0);
 
         this->ren_text_buffer = this->text_buffer;
-    }
-
-    void readf::clear_suggestions()
-    {
-    }
-
-    void readf::render_suggestions()
-    {
     }
 }

@@ -3,15 +3,16 @@
 
 #include "console/console.h"
 #include "strings/strings.h"
+#include "array/array.h"
 
 #include "core/lexer/lex.h"
 
 namespace console
 {
-    readf::readf(std::vector<std::string> suggestions)
+    readf::readf(std::vector<std::string> suggestion_list)
     {
         this->suggestion_idx = 0;
-        this->suggestions = suggestions;
+        this->suggestion_list = suggestion_list;
 
         this->text_buffer = "";
         this->ren_text_buffer = "";
@@ -72,6 +73,7 @@ namespace console
     std::vector<lex::token> readf::takeinput()
     {
         KEY_EVENT_RECORD key;
+        this->history_idx = array::is_empty(this->history_list) ? 0 : this->history_list.size();
 
         while (true)
         {
@@ -96,6 +98,7 @@ namespace console
                     this->vector3.x = 0;
                     this->vector3.y += pos.Y + 1;
 
+                    this->clear_suggestions();
                     std::cout << std::endl;
                     break;
                 }
