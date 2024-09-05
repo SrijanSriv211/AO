@@ -7,9 +7,12 @@ namespace console
 {
     void readf::handle_ctrl_enter()
     {
-        text_buffer.insert(this->vector3.i, this->suggestion);
-        this->vector3.i += this->suggestion.length();
-        this->vector3.x += this->suggestion.length();
+        if (this->text_buffer != this->suggestion)
+        {
+            this->text_buffer.insert(this->vector3.i, this->suggestion);
+            this->vector3.i += this->suggestion.length();
+            this->vector3.x += this->suggestion.length();
+        }
         this->suggestion_idx = 0;
         this->suggestion = "";
 
