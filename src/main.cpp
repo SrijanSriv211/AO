@@ -5,5 +5,13 @@ int main(int argc, char const *argv[])
 {
     std::vector<std::string> args(argv, argv + argc);
     args.erase(args.begin());
-    return take_entry(args);
+    int return_code = 0;
+
+    while (true)
+    {
+        if (take_entry(args) == 0)
+            break;
+    }
+
+    return return_code;
 }
