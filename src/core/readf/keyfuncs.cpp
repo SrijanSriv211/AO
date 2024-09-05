@@ -7,25 +7,26 @@ namespace console
 {
     void readf::handle_ctrl_enter()
     {
-        text_buffer += this->suggestion;
+        text_buffer.insert(this->vector3.i, this->suggestion);
         this->vector3.i += this->suggestion.length();
         this->vector3.x += this->suggestion.length();
         this->suggestion_idx = 0;
         this->suggestion = "";
 
         this->handle_escape();
+        this->clear_suggestions();
         this->update_console(false);
     }
 
     void readf::handle_tab()
     {
-        if (array::is_empty(this->suggestions))
+        if (array::is_empty(this->suitable_suggestions))
             return;
 
         suggestion_idx += 1;
-        suggestion_idx %= suggestions.size();
+        suggestion_idx %= this->suitable_suggestions.size();
 
-        if (suggestion_idx < 0 || suggestion_idx > suggestions.size())
+        if (suggestion_idx < 0 || suggestion_idx > this->suitable_suggestions.size())
             suggestion_idx = 0;
 
         handle_ctrl_spacebar();
@@ -114,10 +115,48 @@ namespace console
 
     void readf::handle_up_arrow()
     {
+        if (array::is_empty(this->history_list) || this->history_idx <= 0)
+            return;
+
+        this->history_idx--;
+        this->text_buffer = this->history_list[this->history_idx];
+        this->vector3.i = this->history_list[this->history_idx].size();
+        this->vector3.x = this->init_cursor_pos.X + this->history_list[this->history_idx].size();
+        this->suggestion = "";
+        this->suggestion_idx = 0;
+
+        if (this->vector3.y >= this->console_window_height() - 1)
+        {
+            this->vector3.y--;
+            this->set_cursor_position(this->vector3.x);
+            this->vector3.y++;
+        }
+
+        this->handle_escape();
+        this->update_console(false);
     }
 
     void readf::handle_down_arrow()
     {
+        if (array::is_empty(this->history_list) || this->history_idx >= this->history_list.size() - 1)
+            return;
+
+        this->history_idx++;
+        this->text_buffer = this->history_list[this->history_idx];
+        this->vector3.i = this->history_list[this->history_idx].size();
+        this->vector3.x = this->init_cursor_pos.X + this->history_list[this->history_idx].size();
+        this->suggestion = "";
+        this->suggestion_idx = 0;
+
+        if (this->vector3.y >= this->console_window_height() - 1)
+        {
+            this->vector3.y--;
+            this->set_cursor_position(this->vector3.x);
+            this->vector3.y++;
+        }
+
+        this->handle_escape();
+        this->update_console(false);
     }
 
     void readf::handle_left_arrow()
