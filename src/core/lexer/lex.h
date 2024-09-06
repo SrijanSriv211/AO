@@ -28,7 +28,6 @@ public:
 
 public:
     lex(const std::string& str, const bool& break_at_error=true, const bool& evaluate_tokens=true);
-    void print_error();
 
 public:
     std::vector<token> tokens;

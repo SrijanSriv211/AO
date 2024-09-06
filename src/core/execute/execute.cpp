@@ -51,11 +51,7 @@ int execute(const std::vector<lex::token>& tokens)
         }
 
         else
-        {
-            console::print(cmd.name + ":", console::color::LIGHT_WHITE, false);
-            console::print("runtime error", console::color::BLACK, console::color::LIGHT_RED, false);
-            console::print(": Command not found", console::color::WHITE);
-        }
+            console::errors::runtime(cmd.name, "Command not found");
     }
 
     return 1; // 1 means that the user continue using AO

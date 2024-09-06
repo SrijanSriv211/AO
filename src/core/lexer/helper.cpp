@@ -28,7 +28,7 @@ bool lex::is_valid_string(const std::string& str)
 
         if (this->break_at_error)
         {
-            this->print_error();
+            console::errors::syntax(this->error);
             return false;
         }
     }
@@ -39,7 +39,7 @@ bool lex::is_valid_string(const std::string& str)
 
         if (this->break_at_error)
         {
-            this->print_error();
+            console::errors::syntax(this->error);
             return false;
         }
     }
@@ -75,9 +75,4 @@ lex::token lex::get_env_var_val(const std::string& str)
     }
 
     return {str, lex::STRING};
-}
-
-void lex::print_error()
-{
-    console::print(this->error, console::color::BLACK, console::color::LIGHT_RED);
 }

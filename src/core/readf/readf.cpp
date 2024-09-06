@@ -104,7 +104,7 @@ namespace console
                 }
 
                 std::cout << std::endl;
-                this->lexer.print_error();
+                console::errors::syntax(this->lexer.error);
             }
 
             else if (!std::iscntrl(key.uChar.UnicodeChar))

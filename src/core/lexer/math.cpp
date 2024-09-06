@@ -2,6 +2,7 @@
 #include "lex.h"
 
 #include "strings/strings.h"
+#include "console/console.h"
 #include "tinyexpr/tinyexpr.h"
 
 std::string lex::math(const std::string& expression)
@@ -16,6 +17,9 @@ std::string lex::math(const std::string& expression)
 
     if (result_s == "nan")
         return expr;
+
+    else if (result_s == "inf")
+        console::errors::runtime("∞", "Division by zero");
 
     return result_s;
 }

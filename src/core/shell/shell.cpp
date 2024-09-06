@@ -1,9 +1,11 @@
 #include "aopch.h"
 #include "shell.h"
 
-void shell::exec(const std::string& command)
+#include "console/console.h"
+
+std::string shell::exec(const std::string& command)
 {
-    std::string full_command = command + "\r\nCMD_EXECUTION_COMPLETED\r\n";
+    std::string full_command = command + "\r\necho CMD_EXECUTION_COMPLETED\r\n";
     DWORD bytes_written;
     WriteFile(h_child_std_in_write, full_command.c_str(), full_command.length(), &bytes_written, NULL);
 
@@ -16,22 +18,28 @@ void shell::exec(const std::string& command)
     {
         if (!PeekNamedPipe(h_child_std_out_read, NULL, 0, NULL, &bytes_read, NULL) || bytes_read == 0)
         {
-            Sleep(100); // Wait a bit if no data is available
+            Sleep(100); // wait a bit if no data is available
             continue;
         }
 
         if (ReadFile(h_child_std_out_read, buffer, sizeof(buffer) - 1, &bytes_read, NULL))
         {
+            // null-terminate the buffer
             buffer[bytes_read] = 0;
+
+            // print the output chunk immediately (this will display it in real-time)
+            // std::cout << buffer;
             output += buffer;
 
-            // Check if the command has completed
+            std::cout << "(" << buffer << ")\n";
+
+            // check if the command has completed
             if (output.find("CMD_EXECUTION_COMPLETED") != std::string::npos)
                 command_completed = true;
         }
     }
 
-    // Remove the command echo, the completion marker, and the prompts
+    // remove the command echo, the completion marker, and the prompts
     size_t start = output.find(command);
     if (start != std::string::npos)
     {
@@ -44,12 +52,16 @@ void shell::exec(const std::string& command)
     if (end != std::string::npos)
         output = output.substr(0, end);
 
-    // Trim trailing whitespace and newlines
+    // trim trailing whitespace and newlines
     end = output.find_last_not_of("\r\n");
     if (end != std::string::npos)
         output = output.substr(0, end + 1);
 
-    std::cout << output << std::endl;
+    // check for the "not recognized" error message
+    if (output.find("is not recognized as an internal or external command") != std::string::npos)
+        return console::errors::runtime(command, "Command not found");
+
+    return output;
 }
 
 shell::shell()
@@ -78,7 +90,7 @@ shell::shell()
 
     CreateProcessA(NULL, cmd_line_buffer.data(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &siStartInfo, &pi_proc_info);
 
-    // Clear initial output
+    // clear initial output
     char buffer[4096];
     DWORD bytes_read;
     while (PeekNamedPipe(h_child_std_out_read, NULL, 0, NULL, &bytes_read, NULL) && bytes_read > 0)

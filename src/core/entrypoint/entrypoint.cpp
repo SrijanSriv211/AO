@@ -83,7 +83,6 @@ void init_folders()
         }
     ]
 }
-
 )";
 
     filesystem::write(".ao\\settings.json", settings_obj);

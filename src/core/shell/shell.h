@@ -5,7 +5,7 @@ class shell
 public:
     shell();
     ~shell();
-    void exec(const std::string& command);
+    std::string exec(const std::string& command);
 
 private:
     HANDLE h_child_std_in_read = NULL;
