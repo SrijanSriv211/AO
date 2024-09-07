@@ -26,10 +26,4 @@ namespace console
         set_console_color(default_fore, default_back);
         if (endl) std::cout << std::endl;
     }
-
-    void throw_error(const std::string& details, const std::string& name_of_error)
-    {
-        print(name_of_error + " error:\n", color::LIGHT_WHITE, color::LIGHT_RED, false);
-        print(details, get_console_fore_color());
-    }
 }

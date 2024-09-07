@@ -28,10 +28,10 @@ namespace console
     void set_console_color(const color& fore, const color& back);
     void print(const std::string& message, const console::color& fore, const bool& endl=true);
     void print(const std::string& message, const console::color& fore, const console::color& back, const bool& endl=true);
-    void throw_error(const std::string& details, const std::string& name_of_error);
 
     namespace errors
     {
+        std::string throw_error(const std::string& message, const std::string& name_of_error);
         std::string runtime(const std::string& command, const std::string& message);
         std::string syntax(const std::string& message);
     };
