@@ -66,17 +66,12 @@ void init_folders()
     foldersystem::create(".ao\\etc");
 
     std::string settings_obj = R"({
-    "default_else_shell": true,
     "startlist": [""],
     "suggestions": ["${dirs}"],
     "commands": [
         {
-            "tasks": [
-                {
-                    "names": [""],
-                    "path": ""
-                }
-            ],
+            "names": [""],
+            "paths": [""],
             "help": "",
             "usage": [""],
             "do_index": true

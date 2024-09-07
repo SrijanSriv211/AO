@@ -3,13 +3,10 @@
 #include "ao.h"
 
 #include "core/lexer/lex.h"
-#include "core/shell/shell.h"
 #include "core/settings/settings.h"
 
 #include "strings/strings.h"
 #include "console/console.h"
-
-shell shell_engine;
 
 int execute(const std::vector<lex::token>& tokens)
 {
@@ -41,13 +38,13 @@ int execute(const std::vector<lex::token>& tokens)
             std::cout << trimmed_str << std::endl;
         }
 
-        else if (load_settings()["default_else_shell"] == true)
+        else if (cmd.name == ">" && cmd.type == lex::SYMBOL)
         {
             // _s stands for converted to strings
             std::string cmd_s = cmd.name;
             std::vector<std::string> args_s(args.size());
             std::transform(args.begin(), args.end(), args_s.begin(), [](const lex::token& token) { return token.name; });
-            shell_engine.exec(cmd_s + " " + strings::trim(strings::join("", args_s)));
+            std::system((cmd_s + " " + strings::trim(strings::join("", args_s))).c_str());
         }
 
         else

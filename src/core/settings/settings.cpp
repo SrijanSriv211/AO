@@ -9,20 +9,15 @@ json load_settings()
 {
     if (!std::filesystem::exists(".ao\\settings.json"))
         return R"({
-    "default_else_shell": true,
     "startlist": [""],
     "suggestions": ["${dirs}"],
     "commands": [
         {
-            "do_index": true,
+            "names": [""],
+            "paths": [""],
             "help": "",
-            "tasks": [
-                {
-                    "names": [""],
-                    "path": ""
-                }
-            ],
-            "usage": [""]
+            "usage": [""],
+            "do_index": true
         }
     ]
 }
