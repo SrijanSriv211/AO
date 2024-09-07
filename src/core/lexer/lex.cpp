@@ -3,20 +3,6 @@
 
 lex::lex(const std::string& str, const bool& break_at_error, const bool& evaluate_tokens)
 {
-    this->escape_chars = {
-        {"\\\\", "\\"},
-        {"\\\"", "\""},
-        {"\\'", "'"},
-        {"\\n", "\n"},
-        {"\\n", "\n"},
-        {"\\0", "\0"},
-        {"\\t", "\t"},
-        {"\\r", "\r"},
-        {"\\b", "\b"},
-        {"\\a", "\a"},
-        {"\\f", "\f"}
-    };
-
     this->break_at_error = break_at_error;
     this->evaluate_tokens = evaluate_tokens;
     std::regex re(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[_.a-zA-Z]+|\d+(?:_\d+)*\.?\d*|[-+*/()]+?|[?,;&@>]|[ ]+|#.*|.+)");

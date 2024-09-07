@@ -43,6 +43,7 @@ private:
     bool any_token_type(const lex::token_type& str, const std::vector<lex::token_type>& iter);
     bool is_math_expr(const std::string& str);
 
+    std::string create_env_filename(const std::string& filename);
     token get_env_var_val(const std::string& str);
     std::string unescape_string(const std::string& str);
     std::string math(const std::string& expression);
@@ -50,8 +51,6 @@ private:
 private:
     bool break_at_error;
     bool evaluate_tokens;
-
-    std::map<std::string, std::string> escape_chars = {};
 
     std::regex r_str = std::regex(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`)");
     std::regex r_id = std::regex(R"([-_/.a-zA-Z]+)");

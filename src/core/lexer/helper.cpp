@@ -49,14 +49,66 @@ bool lex::is_valid_string(const std::string& str)
 
 std::string lex::unescape_string(const std::string& str)
 {
-    std::string unescaped_str = str;
-    for (const auto& [key, val] : this->escape_chars)
+    std::map<char, char> escape_chars = {
+        {'\\', '\\'},
+        {'"', '"'},
+        {'\'', '\''},
+        {'n', '\n'},
+        {'n', '\n'},
+        {'0', '\0'},
+        {'t', '\t'},
+        {'r', '\r'},
+        {'b', '\b'},
+        {'a', '\a'},
+        {'f', '\f'}
+    };
+
+    std::string unescaped_str = "";
+    bool found_escape_char = false;
+
+    for (int i = 0; i < static_cast<int>(str.size()); i++)
     {
-        if (unescaped_str.find(key) != std::string::npos)
-            unescaped_str = strings::replace_all(unescaped_str, key, val);
+        if (str[i] == '\\')
+        {
+            i++;
+
+            for (const auto& [key, val] : escape_chars)
+            {
+                if (str[i] == key)
+                {
+                    unescaped_str += val;
+                    found_escape_char = true;
+                    break;
+                }
+            }
+
+            if (!found_escape_char)
+                unescaped_str += "\\" + str[i];
+        }
+
+        else
+            unescaped_str += str[i];
+
+        found_escape_char = false;
     }
 
     return unescaped_str;
+}
+
+std::string lex::create_env_filename(const std::string& filename)
+{
+    if (std::filesystem::exists(filename))
+        return filename;
+
+    const std::string exts[5] = {".ao", ".exe", ".msi", ".bat", ".cmd"};
+
+    for (const std::string& ext : exts)
+    {
+        if (std::filesystem::exists(filename + ext))
+            return filename + ext;
+    }
+
+    return "";
 }
 
 lex::token lex::get_env_var_val(const std::string& str)
@@ -73,6 +125,11 @@ lex::token lex::get_env_var_val(const std::string& str)
         //* then the token type will be an int. but that's for future, not now.
         return {env_var_val, lex::IDENTIFIER};
     }
+
+    // check if the file already exists
+    const std::string filename = this->create_env_filename(env_var_name);
+    if (!strings::is_empty(filename))
+        return {filename, lex::IDENTIFIER};
 
     return {str, lex::STRING};
 }
