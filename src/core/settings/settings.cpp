@@ -5,12 +5,9 @@
 
 using json = nlohmann::json;
 
-json load_settings()
-{
-    if (!std::filesystem::exists(".ao\\settings.json"))
-        return R"({
+std::string settings_format = R"({
     "startlist": [""],
-    "suggestions": ["${dirs}"],
+    "suggestions": ["help", "--help", "-h", "-?", "/?", "cls", "exit", "_clear", "_cls", "_initAO", "-i", "-aod", "--init", "--diagxt", "--setup", "${dirs}"],
     "commands": [
         {
             "names": [""],
@@ -21,7 +18,12 @@ json load_settings()
         }
     ]
 }
-)"_json;
+)";
+
+json load_settings()
+{
+    if (!std::filesystem::exists(".ao\\settings.json"))
+        return json::parse(settings_format);
 
     std::ifstream f(".ao\\settings.json");
     return json::parse(f);

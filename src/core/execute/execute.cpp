@@ -41,10 +41,9 @@ int execute(const std::vector<lex::token>& tokens)
         else if (cmd.name == ">" && cmd.type == lex::SYMBOL)
         {
             // _s stands for converted to strings
-            std::string cmd_s = cmd.name;
             std::vector<std::string> args_s(args.size());
             std::transform(args.begin(), args.end(), args_s.begin(), [](const lex::token& token) { return token.name; });
-            std::system((cmd_s + " " + strings::trim(strings::join("", args_s))).c_str());
+            std::system(strings::trim(strings::join("", args_s)).c_str());
         }
 
         else

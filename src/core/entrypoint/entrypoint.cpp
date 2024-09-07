@@ -42,11 +42,11 @@ int take_entry(const std::vector<std::string> args)
             std::vector<lex::token> input_tokens = readf.takeinput();
             history = readf.history_list;
 
+            print_new_line = true;
             is_running = execute(input_tokens);
 
             if (is_running == 1 && print_new_line)
                 std::cout << std::endl;
-            print_new_line = true;
         }
     }
 
@@ -64,21 +64,5 @@ void init_folders()
 {
     foldersystem::create(".ao");
     foldersystem::create(".ao\\etc");
-
-    std::string settings_obj = R"({
-    "startlist": [""],
-    "suggestions": ["${dirs}"],
-    "commands": [
-        {
-            "names": [""],
-            "paths": [""],
-            "help": "",
-            "usage": [""],
-            "do_index": true
-        }
-    ]
-}
-)";
-
-    filesystem::write(".ao\\settings.json", settings_obj);
+    filesystem::write(".ao\\settings.json", settings_format);
 }
