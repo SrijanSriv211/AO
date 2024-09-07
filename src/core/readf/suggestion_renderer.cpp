@@ -42,13 +42,20 @@ namespace console
 
     void readf::get_suitable_suggestions(const int& num_suggestions)
     {
+        std::vector<std::string> suitable_suggestions_t = {}; // _t means temp
         this->suitable_suggestions = {};
-        int iter_size = std::min(12, static_cast<int>(suggestion_list.size()));
 
-        for (int i = 0; i < iter_size; i++)
+        for (std::vector<std::string>::size_type i = 0; i < suggestion_list.size(); i++)
         {
             if (strings::contains_eachother(text_buffer, this->suggestion_list[i]))
-                suitable_suggestions.push_back(this->suggestion_list[i]);
+                suitable_suggestions_t.push_back(this->suggestion_list[i]);
         }
+
+        int slice_size = std::min(num_suggestions, static_cast<int>(suitable_suggestions_t.size()));
+
+        if (slice_size < 1)
+            return;
+
+        this->suitable_suggestions = std::vector(suitable_suggestions_t.begin(), suitable_suggestions_t.begin() + slice_size);
     }
 }

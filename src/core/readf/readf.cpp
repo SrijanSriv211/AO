@@ -99,7 +99,10 @@ namespace console
                     this->vector3.y += pos.Y + 1;
 
                     this->clear_suggestions();
-                    std::cout << std::endl;
+                    // suggestion list is empty meaning no suggestions are being rendered
+                    // so create a new line because the suggestion renderer will not do that automatically
+                    if (array::is_empty(this->suggestion_list))
+                        std::cout << std::endl;
                     break;
                 }
 
