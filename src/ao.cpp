@@ -15,7 +15,7 @@ namespace AO
 {
     const std::string about_AO = "A command-line tool built to control your OS directly through the command-line";
     const std::string AO_repo_link = "https://github.com/SrijanSriv211/AO";
-    const std::filesystem::path ao_env_path = std::filesystem::current_path();
+    std::string ao_env_path = std::filesystem::current_path().string();
 
     // https://stackoverflow.com/q/50889647/18121288
     std::string get_root_path()

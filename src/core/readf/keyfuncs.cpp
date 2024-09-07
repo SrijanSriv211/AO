@@ -47,7 +47,7 @@ namespace console
         this->clear_suggestions();
     }
 
-    // Clear all the text
+    // clear all the text
     void readf::handle_shift_escape()
     {
         text_buffer = "";

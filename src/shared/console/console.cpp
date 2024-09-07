@@ -3,7 +3,7 @@
 
 namespace console
 {
-    // Get console color.
+    // get console color.
     color get_console_fore_color()
     {
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -27,10 +27,10 @@ namespace console
             color background_color = static_cast<color>((attributes & BACKGROUND_MASK) >> 4);
             return background_color;
         }
-        return color::BLACK; // Default to black if unable to retrieve
+        return color::BLACK; // default to black if unable to retrieve
     }
 
-    // Set console color.
+    // set console color.
     void set_console_color(const color& fore)
     {
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -40,7 +40,7 @@ namespace console
     void set_console_color(const color& fore, const color& back)
     {
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        WORD color = (back << 4) | fore; // Background color is shifted to the upper 4 bits
+        WORD color = (back << 4) | fore; // background color is shifted to the upper 4 bits
         SetConsoleTextAttribute(hOut, color);
     }
 

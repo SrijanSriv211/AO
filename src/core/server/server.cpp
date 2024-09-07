@@ -167,7 +167,7 @@ void start_server(const std::string& ip_address, const int& port)
                 AO::print_prompt();
 
                 console::readf readf = console::readf({""});
-                execute(readf.render_text(body));
+                execute_tokens(readf.render_text(body));
 
                 std::string response = process_input(body, "ok", 200);
                 send_response(client_socket, response);

@@ -31,6 +31,7 @@ int take_entry(const std::vector<std::string> args)
     {
         setup(); // show a setup screen with some basic details on first boot
         AO::clear_console();
+        run_ao_scripts(load_settings()["startlist"]);
         is_running = 1;
 
         while (is_running == 1)
@@ -43,7 +44,7 @@ int take_entry(const std::vector<std::string> args)
             history = readf.history_list;
 
             print_new_line = true;
-            is_running = execute(input_tokens);
+            is_running = execute_tokens(input_tokens);
 
             if (is_running == 1 && print_new_line)
                 std::cout << std::endl;
@@ -55,7 +56,7 @@ int take_entry(const std::vector<std::string> args)
 
 void unrecognized_argument_error(const std::string& err)
 {
-    console::throw_error(err, "Unrecognized argument");
+    console::errors::throw_error(err, "Unrecognized argument");
 }
 
 // initialize .ao folder with it's subdirectories

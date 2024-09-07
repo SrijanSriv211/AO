@@ -47,7 +47,7 @@ namespace strings
             last_pos = find_pos + old_str.length();
         }
 
-        // Care for the rest after last occurrence
+        // care for the rest after last occurrence
         new_string += str.substr(last_pos);
         return new_string;
     }

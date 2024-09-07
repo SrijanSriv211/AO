@@ -39,7 +39,7 @@ std::vector<argparse::parsed_argument> argparse::parse(const std::vector<std::st
         std::string lowercase_arg = strings::lowercase(args[i]);
         argument matching_argument = find_matching_argument(lowercase_arg);
 
-        // Return if no matching command was found.
+        // return if no matching command was found.
         if (matching_argument.names.empty())
         {
             if (std::any_of(arg_flags.begin(), arg_flags.end(), [&](const std::string& flag) { return lowercase_arg.find(flag) == 0; }))
@@ -67,7 +67,7 @@ std::vector<argparse::parsed_argument> argparse::parse(const std::vector<std::st
             {
                 if (matching_argument.default_value.empty())
                 {
-                    console::throw_error(args[i], "No argument");
+                    console::errors::throw_error(args[i], "No argument");
                     return {};
                 }
 
@@ -94,7 +94,7 @@ std::vector<argparse::parsed_argument> argparse::parse(const std::vector<std::st
         if (!missing_arg_list.empty())
         {
             std::string str_missing_arg_list = "Missing required argument(s): " + strings::join(", ", missing_arg_list);
-            console::throw_error(str_missing_arg_list, "Too few arguments");
+            console::errors::throw_error(str_missing_arg_list, "Too few arguments");
             return {};
         }
     }
