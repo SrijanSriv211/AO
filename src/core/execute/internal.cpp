@@ -5,6 +5,7 @@
 #include "core/entrypoint/entrypoint.h"
 #include "console/console.h"
 #include "strings/strings.h"
+#include "array/array.h"
 
 void AOs1000()
 {
@@ -66,6 +67,20 @@ void help()
     std::cout << "help\n";
 }
 
+void chdir(const std::vector<std::string>& path)
+{
+    std::filesystem::current_path(path.front());
+}
+
+void workspace(const std::vector<std::string>& workspace_path)
+{
+    if (array::is_empty(workspace_path))
+        std::cout << AO::ao_env_path << std::endl;
+
+    else
+        AO::ao_env_path = workspace_path.front();
+}
+
 std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_AOs1000"}, AOs1000},
     {{"--setup"}, run_setup},
@@ -83,9 +98,25 @@ std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_initAO", "--init", "-i"}, init_folders}
 };
 
+std::map<std::vector<std::string>, std::function<void(const std::vector<std::string>&)>> cmd_args_func_map = {
+    {{"cd", "_chdir", "--chdir"}, chdir},
+    {{"_cws", "--workspace"}, workspace}
+};
+
 std::function<void()> get_command_func(const std::string& cmd)
 {
     for (const auto& [key, pair] : cmd_func_map)
+    {
+        if (strings::any(cmd, key, true))
+            return pair;
+    }
+
+    return nullptr;
+}
+
+std::function<void(const std::vector<std::string>&)> get_cmd_args_func(const std::string& cmd)
+{
+    for (const auto& [key, pair] : cmd_args_func_map)
     {
         if (strings::any(cmd, key, true))
             return pair;
