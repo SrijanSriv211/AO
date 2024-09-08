@@ -7,6 +7,11 @@
 #include "strings/strings.h"
 #include "array/array.h"
 
+// https://stackoverflow.com/a/5459929/18121288
+// only the first 2 macros for useful for me
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
 void AOs1000()
 {
     console::print("AOs1000!", console::color::LIGHT_WHITE);
@@ -59,12 +64,26 @@ void itsmagic()
 
 void diagxt()
 {
-    std::cout << "diagxt\n";
-}
+    std::string date_v = STR(VERSION);
+    std::string semantic_v = STR(STD);
 
-void help()
-{
-    std::cout << "help\n";
+    std::vector<std::string> details = {
+        "NAME        : AO " + date_v,
+        "VERSION     : " + semantic_v,
+        "PROCESS     : AO.exe",
+        "SYSTEM TYPE : x64",
+        "",
+        "AUTHOR           : SrijanSriv211 (Srijan Srivastava)",
+        "REGISTERED OWNER : " + std::string(std::getenv("username")),
+        "",
+        "ROOT DIRECTORY     : " + AO::get_root_path(),
+        "SETTINGS FILE      : " + AO::ao_env_path + "\\.ao\\settings.json",
+        "",
+        "GITHUB REPO     : " + AO::AO_repo_link,
+        "SYSTEM LANGUAGE : en-in; English (India)"
+    };
+
+    console::print(strings::join("\n", details), console::color::LIGHT_WHITE);
 }
 
 void chdir(const std::vector<std::string>& path)
@@ -78,7 +97,13 @@ void workspace(const std::vector<std::string>& workspace_path)
         std::cout << AO::ao_env_path << std::endl;
 
     else
-        AO::ao_env_path = workspace_path.front();
+    {
+        std::string name = workspace_path.front();
+        if (strings::startswith_any(name, {"\"", "'", "`"}) && strings::endswith_any(name, {"\"", "'", "`"}))
+            name = strings::trim(name, 1, 2);
+
+        AO::ao_env_path = name;
+    }
 }
 
 std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
@@ -94,7 +119,6 @@ std::map<std::vector<std::string>, std::function<void()>> cmd_func_map = {
     {{"_IAmIronMan", "-mrstark"}, mrstark},
     {{"_itsmagicitsmagic"}, itsmagic},
     {{"--diagxt", "-aod"}, diagxt},
-    {{"help", "--help", "-h", "-?", "/?"}, help},
     {{"_initAO", "--init", "-i"}, init_folders}
 };
 
