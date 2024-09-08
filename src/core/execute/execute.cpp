@@ -23,6 +23,15 @@ int exec_command(const lex::token& cmd, const std::vector<std::string>& args)
     else if (cmd.name == "reload" || cmd.name == "-r" || cmd.name == "_refresh")
         return 2; // 2 means that the user wants to reload AO
 
+    else if (settings::get_command_by_name(cmd.name) != -1)
+        settings::run_command_by_id(cmd.name, args);
+
+    else if (std::filesystem::exists(cmd.name) && cmd.type == lex::IDENTIFIER)
+        std::system((cmd.name + " " + strings::trim(strings::join("", args))).c_str());
+
+    else if (cmd.name == ">" && cmd.type == lex::SYMBOL)
+        std::system(strings::trim(strings::join("", args)).c_str());
+
     else if (cmd.type == lex::EXPR)
         std::cout << cmd.name << std::endl;
 
@@ -32,12 +41,6 @@ int exec_command(const lex::token& cmd, const std::vector<std::string>& args)
         std::string trimmed_str = strings::trim(cmd.name, 1, 2);
         std::cout << trimmed_str << std::endl;
     }
-
-    else if (std::filesystem::exists(cmd.name) && cmd.type == lex::IDENTIFIER)
-        std::system((cmd.name + " " + strings::trim(strings::join("", args))).c_str());
-
-    else if (cmd.name == ">" && cmd.type == lex::SYMBOL)
-        std::system(strings::trim(strings::join("", args)).c_str());
 
     else
         console::errors::runtime(cmd.name, "Command not found");

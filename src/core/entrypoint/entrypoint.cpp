@@ -31,13 +31,13 @@ int take_entry(const std::vector<std::string> args)
     {
         setup(); // show a setup screen with some basic details on first boot
         AO::clear_console();
-        run_ao_scripts(load_settings()["startlist"]);
+        run_ao_scripts(settings::load()["startlist"]);
         is_running = 1;
 
         while (is_running == 1)
         {
             AO::print_prompt();
-            console::readf readf = console::readf(load_settings()["suggestions"]);
+            console::readf readf = console::readf(settings::get_all_suggestions());
 
             readf.history_list = history;
             std::vector<lex::token> input_tokens = readf.takeinput();
@@ -65,5 +65,5 @@ void init_folders()
 {
     foldersystem::create(".ao");
     foldersystem::create(".ao\\etc");
-    filesystem::write(".ao\\settings.json", settings_format);
+    filesystem::write(".ao\\settings.json", settings::format);
 }
