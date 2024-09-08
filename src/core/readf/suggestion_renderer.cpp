@@ -44,10 +44,12 @@ namespace console
     {
         std::vector<std::string> suitable_suggestions_t = {}; // _t means temp
         this->suitable_suggestions = {};
+        lex l = lex(text_buffer, false, true);
+        std::string last_tok = l.tokens[l.tokens.size()-2].name;
 
         for (std::vector<std::string>::size_type i = 0; i < suggestion_list.size(); i++)
         {
-            if (strings::contains_eachother(text_buffer, this->suggestion_list[i]))
+            if (strings::contains_eachother(last_tok, this->suggestion_list[i]))
                 suitable_suggestions_t.push_back(this->suggestion_list[i]);
         }
 

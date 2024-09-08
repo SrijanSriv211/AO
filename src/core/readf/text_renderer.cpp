@@ -24,7 +24,7 @@ namespace console
         this->clear_console();
         this->render_tokens();
 
-        if (!to_render_suggestions || array::is_empty(this->suggestion_list))
+        if (!to_render_suggestions || array::is_empty(this->suggestion_list) || strings::is_empty(text_buffer))
             return;
 
         this->clear_suggestions();
