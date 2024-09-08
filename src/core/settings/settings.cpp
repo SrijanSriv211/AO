@@ -38,7 +38,19 @@ namespace settings
     std::vector<std::string> get_all_suggestions()
     {
         json settings = load();
-        std::vector<std::string> suggestions = settings["suggestions"];
+        std::vector<std::string> suggestions = {};
+
+        for (size_t i = 0; i < settings["suggestions"].size(); i++)
+        {
+            if (settings["suggestions"][i] == "${dirs}")
+            {
+                for (const auto & entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
+                    suggestions.push_back("\"" + entry.path().string() + "\"&");
+            }
+
+            else
+                suggestions.push_back(settings["suggestions"][i]);
+        }
 
         for (size_t i = 0; i < settings["commands"].size(); i++)
         {
