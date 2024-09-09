@@ -29,7 +29,7 @@ int exec_command(const lex::token& cmd, const std::vector<std::string>& args)
     else if (std::filesystem::exists(cmd.name) && cmd.type == lex::IDENTIFIER)
         std::system((cmd.name + " " + strings::trim(strings::join("", args))).c_str());
 
-    else if (cmd.name == ">" && cmd.type == lex::SYMBOL)
+    else if (cmd.name == ">" && cmd.type == lex::GREATER)
         std::system(strings::trim(strings::join("", args)).c_str());
 
     else if (cmd.type == lex::EXPR)

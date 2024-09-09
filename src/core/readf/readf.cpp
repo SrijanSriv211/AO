@@ -29,8 +29,9 @@ namespace console
             { lex::EXPR, console::LIGHT_CYAN },
             { lex::BOOL, console::CYAN },
             { lex::AMPERSAND, console::LIGHT_BLUE },
+            { lex::AT, console::LIGHT_BLUE },
             { lex::FLAG, console::GRAY },
-            { lex::SYMBOL, console::GRAY },
+            { lex::GREATER, console::GRAY },
             { lex::COMMENT, console::GRAY },
             { lex::SEMICOLON, console::GRAY },
             { lex::INTERNAL, console::GREEN }
@@ -88,7 +89,7 @@ namespace console
 
             else if (key.wVirtualKeyCode == VK_RETURN)
             {
-                this->lexer = lex(text_buffer, false, false);
+                this->lexer = lex(text_buffer, false, true);
 
                 if (strings::is_empty(lexer.error))
                 {
@@ -132,7 +133,7 @@ namespace console
         this->update_console(false);
         std::cout << std::endl;
 
-        this->lexer = lex(text_buffer, false, true);
+        this->lexer = lex(text_buffer, false, false);
         return this->lexer.tokens;
     }
 }

@@ -2,6 +2,8 @@
 #include "lex.h"
 
 #include "strings/strings.h"
+#include "console/console.h"
+#include "math/math.h"
 
 void lex::assign_token_type(const std::vector<std::string>& toks)
 {
@@ -25,11 +27,14 @@ void lex::assign_token_type(const std::vector<std::string>& toks)
         else if (str == "&")
             tok = {str, lex::AMPERSAND};
 
+        else if (str == "@")
+            tok = {str, lex::AT};
+
+        else if (str == ">")
+            tok = {str, lex::GREATER};
+
         else if (strings::any(str, {"true", "false"}, true))
             tok = {str, lex::BOOL};
-
-        else if (strings::any(str, {">", "@"}, true))
-            tok = {str, lex::SYMBOL};
 
         else if (strings::startswith_any(str, {"\"", "'", "`"}))
         {
@@ -117,7 +122,16 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
         if (toks[i].name.size() >= 3 && toks[i].type == lex::STRING && toks[i+1].type == lex::AMPERSAND)
         {
             std::string trimmed_str = strings::trim(toks[i].name, 1, 2);
-            tok = this->is_math_expr(trimmed_str) ? lex::token({this->math(trimmed_str), lex::EXPR}) : lex::token({trimmed_str, lex::IDENTIFIER});
+            tok = this->is_math_expr(trimmed_str) ? lex::token({math::eval(trimmed_str), lex::EXPR}) : lex::token({trimmed_str, lex::IDENTIFIER});
+            i++;
+        }
+
+        // @ just after a string literal will mean that string is to be evaluated into an `EXPR`,
+        // meaning the string contains a math expression and is to be evaluated.
+        else if (toks[i].name.size() >= 3 && toks[i].type == lex::STRING && toks[i+1].type == lex::AT)
+        {
+            std::string trimmed_str = strings::trim(toks[i].name, 1, 2);
+            tok = {math::eval(trimmed_str, false), lex::EXPR};
             i++;
         }
 
@@ -129,7 +143,22 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
             tok = {this->unescape_string(toks[i].name), toks[i].type};
 
         else if (toks[i].type == lex::EXPR)
-            tok = {lex::math(toks[i].name), toks[i].type};
+        {
+            std::string evaluated_expr = math::eval(toks[i].name, false);
+
+            if (strings::any(evaluated_expr, {"nan", "inf"}))
+            {
+                this->error = "invalid math expression [" + toks[i].name + "] = " + evaluated_expr;
+
+                if (this->break_at_error)
+                {
+                    console::errors::syntax(this->error);
+                    return {};
+                }
+            }
+
+            tok = {evaluated_expr, toks[i].type};
+        }
 
         else if (toks[i].type == lex::SEMICOLON && toks[i+1].type == lex::WHITESPACE)
         {

@@ -14,10 +14,11 @@ public:
         SEMICOLON, // 6
         INTERNAL, // 7
         STRING, // 8
-        SYMBOL, // 9
+        GREATER, // 9
         FLAG, // 10
         BOOL, // 11
-        EXPR // 12
+        EXPR, // 12
+        AT // 13
     };
 
     struct token
@@ -46,7 +47,6 @@ private:
     std::string create_env_filename(const std::string& filename);
     token get_env_var_val(const std::string& str);
     std::string unescape_string(const std::string& str);
-    std::string math(const std::string& expression);
 
 private:
     bool break_at_error;
