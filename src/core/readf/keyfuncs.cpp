@@ -9,7 +9,7 @@ namespace console
     {
         if (this->text_buffer != this->suggestion)
         {
-            this->text_buffer.insert(this->vector3.i, this->suggestion);
+            this->text_buffer += this->suggestion;
             this->vector3.i += this->suggestion.length();
             this->vector3.x += this->suggestion.length();
         }

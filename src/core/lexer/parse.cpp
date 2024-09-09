@@ -143,22 +143,7 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
             tok = {this->unescape_string(toks[i].name), toks[i].type};
 
         else if (toks[i].type == lex::EXPR)
-        {
-            std::string evaluated_expr = math::eval(toks[i].name, false);
-
-            if (strings::any(evaluated_expr, {"nan", "inf"}))
-            {
-                this->error = "invalid math expression [" + toks[i].name + "] = " + evaluated_expr;
-
-                if (this->break_at_error)
-                {
-                    console::errors::syntax(this->error);
-                    return {};
-                }
-            }
-
-            tok = {evaluated_expr, toks[i].type};
-        }
+            tok = {math::eval(toks[i].name), toks[i].type};
 
         else if (toks[i].type == lex::SEMICOLON && toks[i+1].type == lex::WHITESPACE)
         {
