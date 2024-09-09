@@ -15,6 +15,11 @@ bool print_new_line = true;
 
 int take_entry(const std::vector<std::string> args)
 {
+    // change code page to UTF-8
+    // https://stackoverflow.com/a/388500/18121288
+    std::system("@chcp 65001>nul");
+
+    // parse arguments passed to AO
     argparse parser = argparse("AO", "A developer tool made by a developer for developers", unrecognized_argument_error);
     parser.add({"-h", "--help", "/?", "-?"}, "Show help message", "", true, false);
     parser.add({"-i", "--init"}, "Initialize in current directory", "", true, false);
