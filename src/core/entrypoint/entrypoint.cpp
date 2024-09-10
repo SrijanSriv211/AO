@@ -17,7 +17,8 @@ int take_entry(const std::vector<std::string> args)
 {
     // change code page to UTF-8
     // https://stackoverflow.com/a/388500/18121288
-    std::system("@chcp 65001>nul");
+    // https://stackoverflow.com/questions/45575863/how-to-print-utf-8-strings-to-stdcout-on-windows
+    SetConsoleOutputCP(65001);
 
     // parse arguments passed to AO
     argparse parser = argparse("AO", "A developer tool made by a developer for developers", unrecognized_argument_error);
