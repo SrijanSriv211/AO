@@ -162,7 +162,7 @@ namespace console
         {
             // if the current token is a `;` then push the next token index to whitepoints
             // if the next token is not a whitespace, otherwise move the next of next token index
-            if (types[i] == lex::SEMICOLON)
+            if ((types[i] == lex::SEMICOLON) || (types[i] == lex::GREATER && i == 0))
                 whitepoints.push_back(types[i+1] == lex::WHITESPACE ? i+2 : i+1);
         }
     }
