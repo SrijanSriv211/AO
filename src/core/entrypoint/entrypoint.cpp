@@ -15,11 +15,6 @@ bool print_new_line = true;
 
 int take_entry(const std::vector<std::string> args)
 {
-    // change code page to UTF-8
-    // https://stackoverflow.com/a/388500/18121288
-    // https://stackoverflow.com/questions/45575863/how-to-print-utf-8-strings-to-stdcout-on-windows
-    SetConsoleOutputCP(65001);
-
     // parse arguments passed to AO
     argparse parser = argparse("AO", "A developer tool made by a developer for developers", unrecognized_argument_error);
     parser.add({"-h", "--help", "/?", "-?"}, "Show help message", "", true, false);
@@ -29,6 +24,16 @@ int take_entry(const std::vector<std::string> args)
     std::vector<argparse::parsed_argument> parsed_args = parser.parse(args);
     std::vector<std::string> history = {};
     int is_running = 0; // 0 = false; 1 = true; 2 = reload
+
+    UINT code_page = GetConsoleOutputCP();
+
+    // change code page to UTF-8
+    if (code_page != 65001)
+    {
+        // https://stackoverflow.com/a/388500/18121288
+        // https://stackoverflow.com/questions/45575863/how-to-print-utf-8-strings-to-stdcout-on-windows
+        SetConsoleOutputCP(65001);
+    }
 
     if (parsed_args.size() > 0)
         return exec_parsed_args(parser, parsed_args);
@@ -57,6 +62,7 @@ int take_entry(const std::vector<std::string> args)
         }
     }
 
+    SetConsoleCP(code_page); // reset code page to the original one.
     return is_running;
 }
 
