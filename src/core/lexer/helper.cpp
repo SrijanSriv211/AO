@@ -97,10 +97,7 @@ std::string lex::unescape_string(const std::string& str)
 
 std::string lex::create_env_filename(const std::string& filename)
 {
-    if (std::filesystem::exists(filename))
-        return filename;
-
-    const std::string exts[5] = {".ao", ".exe", ".msi", ".bat", ".cmd"};
+    const std::string exts[] = {"", ".ao", ".exe", ".msi", ".bat", ".cmd"};
 
     for (const std::string& ext : exts)
     {

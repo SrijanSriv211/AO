@@ -5,7 +5,7 @@ lex::lex(const std::string& str, const bool& break_at_error, const bool& evaluat
 {
     this->break_at_error = break_at_error;
     this->evaluate_tokens = evaluate_tokens;
-    std::regex re(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[_.a-zA-Z]+|\d+(?:_\d+)*\.?\d*|[-+*/()]+?|[?,;&@>]|[ ]+|#.*|.+)");
+    std::regex re(R"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|`(?:\\.|[^'\\])*`|[_.a-zA-Z]+|\d+(?:_\d+)*\.?\d*|[-+*/()]+?|[?,!;&`'\"@>]|[ ]+|#.*|.+)");
 
     std::vector<std::string> toks = this->tokenizer(str, re);
     this->assign_token_type(toks);
