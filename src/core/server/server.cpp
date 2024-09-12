@@ -3,8 +3,9 @@
 #include "ao.h"
 
 #include "core/entrypoint/entrypoint.h"
+#include "core/renderer/renderer.h"
 #include "core/execute/execute.h"
-#include "core/readf/readf.h"
+#include "core/lexer/lex.h"
 
 #include "console/console.h"
 #include "strings/strings.h"
@@ -132,17 +133,18 @@ void cleanup(SOCKET client_socket, SOCKET server_socket)
 }
 
 // main server loop to handle incoming connections and requests
-void start_server(const std::string& ip_address, const int& port)
+int start_server(const std::string& ip_address, const int& port)
 {
     if (!initialize_winsock())
-        return;
+        return -1; // -1 means error
 
     SOCKET server_socket = create_server_socket();
     const std::string message = "Server listening on " + ip_address + ":" + std::to_string(port);
     if (server_socket == INVALID_SOCKET || !bind_server_socket(server_socket, ip_address, port) || !start_listening(server_socket, message))
-        return;
+        return -1;
 
-    while (true)
+    int return_code = 1;
+    while (return_code == 1)
     {
         SOCKET client_socket = accept_client(server_socket);
         if (client_socket == INVALID_SOCKET)
@@ -166,8 +168,26 @@ void start_server(const std::string& ip_address, const int& port)
             {
                 AO::print_prompt();
 
-                console::readf readf = console::readf({""});
-                execute_tokens(readf.render_text(body));
+                lex lexer = lex(body, false, false);
+
+                std::map<lex::token_type, console::color> token_colors = {
+                    { lex::STRING, console::LIGHT_YELLOW },
+                    { lex::EXPR, console::LIGHT_CYAN },
+                    { lex::BOOL, console::CYAN },
+                    { lex::AMPERSAND, console::LIGHT_BLUE },
+                    { lex::AT, console::LIGHT_BLUE },
+                    { lex::FLAG, console::GRAY },
+                    { lex::GREATER, console::GRAY },
+                    { lex::COMMENT, console::GRAY },
+                    { lex::SEMICOLON, console::GRAY },
+                    { lex::INTERNAL, console::GREEN }
+                };
+
+                console::renderer renderer = console::renderer(token_colors, lexer.get_whitepoints());
+                renderer.render_tokens(lexer.tokens);
+                std::cout << std::endl;
+
+                return_code = execute_tokens(lexer.tokens);
 
                 std::string response = process_input(body, "ok", 200);
                 send_response(client_socket, response);
@@ -180,4 +200,5 @@ void start_server(const std::string& ip_address, const int& port)
 
     // cleanup resources (only server socket needs to be cleaned up in this loop)
     cleanup(INVALID_SOCKET, server_socket);
+    return return_code;
 }
