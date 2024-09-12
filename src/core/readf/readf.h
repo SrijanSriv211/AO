@@ -52,17 +52,12 @@ namespace console
 
     private:
         // define helper functions
-        COORD get_cursor_pos();
-        void set_cursor_pos(const COORD& c);
         COORD calc_xy_coord(const int& total_dist);
-        int console_window_width();
-        int console_window_height();
         bool getconchar(KEY_EVENT_RECORD& krec);
         DWORD get_modifier_state(KEY_EVENT_RECORD& krec);
         void set_cursor_position(const int& total_dist);
         std::pair<int, int> get_token_diff(const std::string& text, const std::string& text2);
         int get_text_diff(const std::string& text, const std::string& text2);
-        void get_whitepoints();
         void clear_error_msg();
 
         // define rendering functions

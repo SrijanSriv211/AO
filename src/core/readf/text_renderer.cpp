@@ -2,6 +2,7 @@
 #include "readf.h"
 
 #include "console/console.h"
+#include "core/renderer/renderer.h"
 #include "strings/strings.h"
 #include "array/array.h"
 
@@ -14,7 +15,7 @@ namespace console
 
         // if the cursor has reached the bottom of the window, then move it up by one point.
         // to ensure that the cursor is not going beyond the window which will crash the program.
-        if (this->vector3.y >= this->console_window_height() - 1)
+        if (this->vector3.y >= console::get_console_window_height() - 1)
         {
             std::cout << std::endl;
             this->vector3.y--;
@@ -85,9 +86,6 @@ namespace console
 
     void readf::render_tokens()
     {
-        // get all white points
-        this->get_whitepoints();
-
         // poop through each token starting from first different token
         render_token(diff_token_idx.first, diff_token_idx.second);
         for (std::vector<lex::token>::size_type i = diff_token_idx.first + 1; i < this->lexer.tokens.size(); i++)

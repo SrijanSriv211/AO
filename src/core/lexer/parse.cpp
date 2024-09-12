@@ -159,3 +159,18 @@ std::vector<lex::token> lex::eval_tokens(const std::vector<lex::token>& toks)
 
     return tokens;
 }
+
+std::map<int, console::color> lex::get_whitepoints()
+{
+    std::map<int, console::color> whitepoints = {{0, console::color::LIGHT_WHITE}};
+
+    for (std::vector<lex::token>::size_type i = 0; i < tokens.size(); i++)
+    {
+        // if the current token is a `;` then push the next token index to whitepoints
+        // if the next token is not a whitespace, otherwise move the next of next token index
+        if (tokens[i].type == lex::SEMICOLON || (tokens[i].type == lex::GREATER && i == 0))
+            whitepoints.insert({tokens[i+1].type == lex::WHITESPACE ? i+2 : i+1, console::color::LIGHT_WHITE});
+    }
+
+    return whitepoints;
+}

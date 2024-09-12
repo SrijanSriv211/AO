@@ -1,93 +1,17 @@
 #include "aopch.h"
 #include "readf.h"
 
+#include "console/console.h"
+
 namespace console
 {
-    void readf::set_cursor_pos(const COORD& c)
-    {
-        HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleCursorPosition(h, c);
-    }
-
-    // https://stackoverflow.com/a/35800317/18121288
-    COORD readf::get_cursor_pos()
-    {
-        HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-        CONSOLE_SCREEN_BUFFER_INFO cbsi;
-
-        if (GetConsoleScreenBufferInfo(h, &cbsi))
-            return cbsi.dwCursorPosition;
-        return {0, 0}; // else return this
-    }
-
     COORD readf::calc_xy_coord(const int& total_dist)
     {
         // calculate the exact x and y positions to put the cursor at.
-        short y = total_dist / this->console_window_width();
-        short x = total_dist - (y * this->console_window_width());
+        short y = total_dist / console::get_console_window_width();
+        short x = total_dist - (y * console::get_console_window_width());
 
         return {x, y};
-    }
-
-    int readf::console_window_width()
-    {
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-        return csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    }
-
-    int readf::console_window_height()
-    {
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-        return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-    }
-
-    // https://stackoverflow.com/a/41213165/18121288
-    bool readf::getconchar(KEY_EVENT_RECORD& krec)
-    {
-        DWORD cc;
-        INPUT_RECORD irec;
-        HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-
-        // console not found
-        if (h == NULL)
-            return false;
-
-        for (;;)
-        {
-            ReadConsoleInput(h, &irec, 1, &cc);
-            if (irec.EventType == KEY_EVENT && ((KEY_EVENT_RECORD &)irec.Event).bKeyDown)
-            {
-                krec = (KEY_EVENT_RECORD &)irec.Event;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    // https://stackoverflow.com/a/18703309/18121288
-    // helper function to get the state of modifier keys
-    DWORD readf::get_modifier_state(KEY_EVENT_RECORD& krec)
-    {
-        DWORD state = 0;
-        if (krec.dwControlKeyState & LEFT_CTRL_PRESSED)
-            state = LEFT_CTRL_PRESSED;
-
-        else if (krec.dwControlKeyState & RIGHT_CTRL_PRESSED)
-            state = RIGHT_CTRL_PRESSED;
-
-        else if (krec.dwControlKeyState & LEFT_ALT_PRESSED)
-            state = LEFT_ALT_PRESSED;
-
-        else if (krec.dwControlKeyState & RIGHT_ALT_PRESSED)
-            state = RIGHT_ALT_PRESSED;
-
-        else if (krec.dwControlKeyState & SHIFT_PRESSED)
-            state = SHIFT_PRESSED;
-
-        return state;
     }
 
     // properly set cursor in the terminal
@@ -96,14 +20,14 @@ namespace console
         COORD pos = this->calc_xy_coord(total_dist);
         pos.Y += this->vector3.y;
 
-        if (pos.Y >= this->console_window_height() - 1 && pos.X >= this->console_window_width() - 1)
+        if (pos.Y >= console::get_console_window_height() - 1 && pos.X >= console::get_console_window_width() - 1)
         {
             pos.Y--;
             this->vector3.y--;
             std::cout << std::endl;
         }
 
-        this->set_cursor_pos({pos.X, pos.Y});
+        console::set_cursor_pos({pos.X, pos.Y});
     }
 
     // (token_idx, char_idx)
@@ -149,26 +73,8 @@ namespace console
         return 0;
     }
 
-    // render tokens with white color on these points such as the very first token or the tokens successor of semicolon token.
-    // this doesn't include whitespaces or the EOL token at the last of the tokens array, it only applies on renderable tokens.
-    // basically they are white points
-    void readf::get_whitepoints()
-    {
-        std::vector<lex::token_type> types(this->lexer.tokens.size());
-        std::transform(this->lexer.tokens.begin(), this->lexer.tokens.end(), types.begin(), [](const lex::token& token) { return token.type; });
-        whitepoints.push_back(0);
-
-        for (std::vector<lex::token_type>::size_type i = 0; i < types.size(); i++)
-        {
-            // if the current token is a `;` then push the next token index to whitepoints
-            // if the next token is not a whitespace, otherwise move the next of next token index
-            if ((types[i] == lex::SEMICOLON) || (types[i] == lex::GREATER && i == 0))
-                whitepoints.push_back(types[i+1] == lex::WHITESPACE ? i+2 : i+1);
-        }
-    }
-
     void readf::clear_error_msg()
     {
-        std::cout << "\n" << std::string(this->console_window_width(), ' ');
+        std::cout << "\n" << std::string(console::get_console_window_width(), ' ');
     }
 }

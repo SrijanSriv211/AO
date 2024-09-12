@@ -1,6 +1,7 @@
 #include "aopch.h"
 #include "readf.h"
 
+#include "console/console.h"
 #include "array/array.h"
 
 namespace console
@@ -128,7 +129,7 @@ namespace console
         this->suggestion = "";
         this->suggestion_idx = 0;
 
-        if (this->vector3.y >= this->console_window_height() - 1)
+        if (this->vector3.y >= console::get_console_window_height() - 1)
         {
             this->vector3.y--;
             this->set_cursor_position(this->vector3.x);
@@ -151,7 +152,7 @@ namespace console
         this->suggestion = "";
         this->suggestion_idx = 0;
 
-        if (this->vector3.y >= this->console_window_height() - 1)
+        if (this->vector3.y >= console::get_console_window_height() - 1)
         {
             this->vector3.y--;
             this->set_cursor_position(this->vector3.x);

@@ -17,7 +17,7 @@ namespace console
         this->text_buffer = "";
         this->ren_text_buffer = "";
 
-        this->init_cursor_pos = this->get_cursor_pos();
+        this->init_cursor_pos = console::get_cursor_pos();
 
         this->vector3.x = this->init_cursor_pos.X;
         this->vector3.y = this->init_cursor_pos.Y;
@@ -78,10 +78,10 @@ namespace console
 
         while (true)
         {
-            if (!this->getconchar(key))
+            if (!console::getconchar(key))
                 continue;
 
-            std::pair<WORD, DWORD> key_combo = std::make_pair(key.wVirtualKeyCode, this->get_modifier_state(key));
+            std::pair<WORD, DWORD> key_combo = std::make_pair(key.wVirtualKeyCode, console::get_modifier_state(key));
 
             // check if the key combination exists in the map
             if (this->key_codes.find(key_combo) != this->key_codes.end())
@@ -100,7 +100,7 @@ namespace console
                     this->vector3.y += pos.Y + 1;
 
                     this->clear_suggestions();
-                    this->set_cursor_pos({(short)this->vector3.x, (short)this->vector3.y});
+                    console::set_cursor_pos({(short)this->vector3.x, (short)this->vector3.y});
                     break;
                 }
 
