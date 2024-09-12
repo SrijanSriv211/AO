@@ -9,8 +9,12 @@ int main(int argc, char const *argv[])
 
     while (true)
     {
-        if (take_entry(args) == 0)
+        return_code = take_entry(args);
+        if (return_code == 0)
             break;
+
+        else if (return_code == -1)
+            return 1;
     }
 
     return return_code;
